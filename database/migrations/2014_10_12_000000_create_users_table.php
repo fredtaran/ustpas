@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('suffix');
             $table->string('email')->unique();
-            $table->string('student_id');
             $table->string('username');
             $table->string('password');
+            $table->enum('role', [0, 1, 2]); // 0 - System Admin/Superuser, 1 - Admission, 2 - Program Chairperson
             $table->rememberToken();
             $table->timestamps();
         });
