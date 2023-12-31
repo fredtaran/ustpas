@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
+        <!-- Toastr -->
+        <link rel="stylesheet" href="../../plugins/toastr/toastr.min.css">
         <!-- Theme style -->
         <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
         <style>
@@ -38,7 +40,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="username">Username</label>
-                                        <input type="username" name="username" class="form-control" id="username" placeholder="Enter username">
+                                        <input type="username" name="username" class="form-control" id="username" placeholder="Enter username" value="{{old('username')}}">
                                     </div>
 
                                     <div class="form-group">
@@ -69,12 +71,19 @@
         <!-- jquery-validation -->
         <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
         <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+        <!-- Toastr -->
+        <script src="../../plugins/toastr/toastr.min.js"></script>
         <!-- AdminLTE App -->
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 
         <!-- Page specific script -->
         <script>
             $(function () {
+
+                @if($errors->any())
+                    toastr.error("{{ implode('', $errors->all(':message')) }}")
+                @endif
+
                 $.validator.setDefaults({
                     submitHandler: function (form) {
                         form.submit();
