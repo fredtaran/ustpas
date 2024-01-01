@@ -26,6 +26,9 @@ Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout'
 // Admission Routes
 Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function() {
     Route::get('', [AdmissionController::class, 'dashboard'])->name('admission.dashboard');
+    Route::get('/courses', [AdmissionController::class, 'courses'])->name('admission.courses_view');
+    Route::post('/courses', [AdmissionController::class, 'save_course'])->name('admission.save_course');
+    Route::get('/course_list', [AdmissionController::class, 'courses_table'])->name('admission.course_list');
 });
 
 // Program Chairperson Routes

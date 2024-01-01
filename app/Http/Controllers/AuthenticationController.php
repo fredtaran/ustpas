@@ -28,11 +28,11 @@ class AuthenticationController extends Controller
             $request->session()->regenerate();
 
             // Check user role and redirect to the appropriate page
-            if($role == 0) {
+            if(Auth::user()->role == 0) {
 
-            } else if($role == 1) {
+            } else if(Auth::user()->role == 1) {
                 return redirect()->intended('/admission');
-            } else if($role == 2) {
+            } else if(Auth::user()->role == 2) {
                 return redirect()->intended('/chairperson');
             }
         }
@@ -40,7 +40,7 @@ class AuthenticationController extends Controller
         // If the credentials is not correct, return error message
         return back()->withErrors([
             'username' => 'The provided credentials do not match our existing records.',
-        ])->withInput($request->input());
+        ])->onlyInput('username');
     }
 
     // Logout process

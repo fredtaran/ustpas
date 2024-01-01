@@ -40,7 +40,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="username">Username</label>
-                                        <input type="username" name="username" class="form-control" id="username" placeholder="Enter username" value="{{old('username')}}">
+                                        <input type="text" name="username" class="form-control" id="username" placeholder="Enter username" value="{{old('username')}}">
                                     </div>
 
                                     <div class="form-group">
