@@ -17,7 +17,7 @@ class AdmissionController extends Controller
 
     // Add Courses view
     public function courses(Request $request) {
-        $chairpersons = User::where('role', 1)->get();
+        $chairpersons = User::where('role', 1)->get(); // For new courses modal select option
 
         return view('admission/courses')->with(['chairpersons' => $chairpersons]);
     }
@@ -47,5 +47,50 @@ class AdmissionController extends Controller
         $courses = Course::with('chairperson')->get();
 
         return response()->json(['data' => $courses]);
+    }
+
+    // Delete course
+    public function delete_course($id) {
+        $course = Course::find($id);
+        if($course->delete()) {
+            return response()->json(['message' => "Record has been deleted successfully"], 200);
+        } else {
+            return response()->json(['message' => "An errro has been encountered."], 500);
+        }
+    }
+
+    // Retrieve data for edit
+    public function get_course($id) {
+        $course = Course::findOrFail($id);
+
+        return response()->json(['course' => $course], 200);
+    }
+
+    // Update course details
+    public function update_course(Request $request, $id) {
+        // Validate inputs
+        $course_data = $request->validate([
+            'edit_course_name' => ['required'],
+            'edit_course_code' => ['required'],
+            'edit_chairperson' => ['exists:users,id']
+        ]);
+
+        // Find the existing record
+        $course = Course::findOrFail($id);
+
+        // Update the values and save
+        $course->course_name = $course_data['edit_course_name'];
+        $course->course_code = $course_data['edit_course_code'];
+        $course->chairperson_id = $course_data['edit_chairperson'];
+        $course->save();
+
+        // Refresh page
+        return redirect()->route('admission.courses_view');
+    }
+
+    // Subject page
+    public function subjects() {
+
+        return view('admission.subjects');
     }
 }
