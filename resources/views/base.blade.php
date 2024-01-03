@@ -92,13 +92,6 @@
                                     Courses
                                 </a>
                             </li>
-
-                            <li class="nav-item">
-                                <a href="{{ route('admission.subjects') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-book"></i>
-                                    Subjects
-                                </a>
-                            </li>
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->

@@ -5,24 +5,25 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use App\Models\Subject;
 use App\Models\User;
 
 class AdmissionController extends Controller
 {
 
-    // Admission Dashboard
+    // Admission Dashboard - return view
     public function dashboard(Request $request) {
         return view('admission/dashboard');
     }
 
-    // Add Courses view
+    // Add Courses view - return view
     public function courses(Request $request) {
         $chairpersons = User::where('role', 1)->get(); // For new courses modal select option
 
         return view('admission/courses')->with(['chairpersons' => $chairpersons]);
     }
 
-    // Process new course to save to database
+    // Process new course to save to database - process
     public function save_course(Request $request) {
         // Validate inputs
         $course_data = $request->validate([
@@ -42,16 +43,16 @@ class AdmissionController extends Controller
         return redirect()->route('admission.courses_view');
     }
 
-    // Fetch all courses - Courses datatable
+    // Fetch all courses - return json
     public function courses_table() {
         $courses = Course::with('chairperson')->get();
 
         return response()->json(['data' => $courses]);
     }
 
-    // Delete course
+    // Delete course - process
     public function delete_course($id) {
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
         if($course->delete()) {
             return response()->json(['message' => "Record has been deleted successfully"], 200);
         } else {
@@ -59,14 +60,14 @@ class AdmissionController extends Controller
         }
     }
 
-    // Retrieve data for edit
+    // Retrieve data for edit - return json
     public function get_course($id) {
         $course = Course::findOrFail($id);
 
         return response()->json(['course' => $course], 200);
     }
 
-    // Update course details
+    // Update course details - process
     public function update_course(Request $request, $id) {
         // Validate inputs
         $course_data = $request->validate([
@@ -88,9 +89,79 @@ class AdmissionController extends Controller
         return redirect()->route('admission.courses_view');
     }
 
-    // Subject page
-    public function subjects() {
+    // Subject page - return view
+    public function course_detail($id) {
+        $course = Course::where('id', $id)->get();
 
-        return view('admission.subjects');
+        return view('admission.course_detail')->with(['course' => $course]);
+    }
+
+    // Save subject - process
+    public function save_subject(Request $request) {
+        // Validate inputs
+        $subject_data = $request->validate([
+            'subject_code' => ['required'],
+            'description' => ['required'],
+            'unit' => ['numeric'],
+            'course_id' => ['required']
+        ]);
+
+        // Initialize the subject model
+        $subject = new Subject();
+        $subject->subject_code = $subject_data['subject_code'];
+        $subject->subject_description = $subject_data['description'];
+        $subject->unit = $subject_data['unit'];
+        $subject->course_id = $subject_data['course_id'];
+        $subject->save();
+
+        // Refresh page
+        return redirect()->route('admission.course_detail', $subject_data['course_id']);
+    }
+
+    // Get list of subjects per course - return json
+    public function get_subjects($id) {
+        $subjects = Subject::where('course_id', $id)->get();
+
+        return response()->json(['data' => $subjects]);
+    }
+
+    // Delete subject - process
+    public function delete_subject($id) {
+        $subject = Subject::findOrFail($id);
+        if($subject->delete()) {
+            return response()->json(['message' => "Record has been deleted successfully"], 200);
+        } else {
+            return response()->json(['message' => "An errro has been encountered."], 500);
+        }
+    }
+
+    // Get subject - return json
+    public function get_subject($id) {
+        $subject = Subject::findOrFail($id);
+
+        return response()->json(['subject' => $subject], 200);
+    }
+
+    // Update subject details - process
+    public function update_subject(Request $request, $id) {
+        // Validate inputs
+        $subject_data = $request->validate([
+            'edit_subject_code' => ['required'],
+            'edit_description' => ['required'],
+            'edit_unit' => ['numeric'],
+            'course_id' => ['required']
+        ]);
+
+        // Find the existing record - return view
+        $subject = Subject::findOrFail($id);
+
+        // Update the values and save
+        $subject->subject_code = $subject_data['edit_subject_code'];
+        $subject->subject_description = $subject_data['edit_description'];
+        $subject->unit = $subject_data['edit_unit'];
+        $subject->save();
+
+        // Refresh page
+        return redirect()->route('admission.course_detail', $subject_data['course_id']);
     }
 }

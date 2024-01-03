@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('subject_code');
             $table->string('subject_description');
+            $table->integer('unit');
+            $table->unsignedBigInteger('course_id');
             $table->timestamps();
+
+            $table->foreign('course_id')->references('id')->on('courses')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

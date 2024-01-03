@@ -31,13 +31,22 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
     // Course
     Route::get('/courses', [AdmissionController::class, 'courses'])->name('admission.courses_view');
     Route::post('/courses', [AdmissionController::class, 'save_course'])->name('admission.save_course');
-    Route::get('/course_list', [AdmissionController::class, 'courses_table'])->name('admission.course_list');
     Route::delete('/courses/{id}', [AdmissionController::class, 'delete_course'])->name('admission.delete_course');
-    Route::get('/courses/{id}', [AdmissionController::class, 'get_course'])->name('admission.get_course');
     Route::post('/courses/{id}/edit', [AdmissionController::class, 'update_course'])->name('admission.update_course');
+    Route::get('/course/{id}', [AdmissionController::class, 'course_detail'])->name('admission.course_detail');
+
+    // Use by datatable - return json
+    Route::get('/course_list', [AdmissionController::class, 'courses_table'])->name('admission.course_list');
+
+    // Use by update  modal - return json
+    Route::get('/courses/{id}', [AdmissionController::class, 'get_course'])->name('admission.get_course');
 
     // Subject
-    Route::get('/subjects', [AdmissionController::class, 'subjects'])->name('admission.subjects');
+    Route::post('/subjects', [AdmissionController::class, 'save_subject'])->name('admission.save_subject');
+    Route::get('/subjects/{id}', [AdmissionController::class, 'get_subjects'])->name('admission.get_subjects');
+    Route::delete('/subject/{id}', [AdmissionController::class, 'delete_subject'])->name('admission.delete_subject');
+    Route::get('/subject/{id}', [AdmissionController::class, 'get_subject'])->name('admission.get_subject');
+    Route::post('/subject/{id}/edit', [AdmissionController::class, 'update_subject'])->name('admission.update_subject');
 });
 
 // Program Chairperson Routes

@@ -23,6 +23,7 @@
         <button type="button" class="btn btn-default btn-outline-primary" data-toggle="modal" data-target="#modal-newCourses">
             <i class="fa fa-plus"></i> New course
         </button>
+        
         <table class="table table-bordered table-hover text-center" id="tbl_courses">
             <thead>
                 <tr>
@@ -239,7 +240,9 @@
     const courseTable = $("#tbl_courses").DataTable({
         ajax: "{{ route('admission.course_list') }}",
         columns: [
-            { data: 'course_code' },
+            { data: 'course_code', render: function(data, type, row, meta) {
+                return '<a href="{{ url('/admission/course/') }}/' + row.id + '">' + data + '</a>';
+            }},
             { data: 'course_name' },
             { data: 'chairperson', render: function(data, type, row, meta) {
                 return data[0].first_name + " " + (data[0].middle_name == null ? "" : data[0].middle_name[0] + ".") + " " + data[0].last_name + " " + (data[0].suffix == null ? "" : data[0].suffix)
