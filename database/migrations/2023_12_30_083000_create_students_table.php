@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('student_id')->unique();
             $table->string('first_name');
-            $table->string('middle_name');
+            $table->string('middle_name')->nullable();
             $table->string('last_name');
-            $table->string('suffix');
+            $table->string('suffix')->nullable();
             $table->string('email')->unique();
             $table->string('contact_number')->unique();
             $table->unsignedBigInteger('course_id');

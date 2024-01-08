@@ -11,7 +11,8 @@
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('admission.dashboard') }}">Home</a></li>
-            <li class="breadcrumb-item active">Subjects</li>
+            <li class="breadcrumb-item">Courses</li>
+            <li class="breadcrumb-item active">{{ $course[0]->course_code }}</li>
         </ol>
     </div><!-- /.col -->
 </div><!-- /.row -->

@@ -22,5 +22,9 @@ class DatabaseSeeder extends Seeder
             'role' => 1,
             'password' => bcrypt('@dmin123'),
         ]);
+
+        $this->call([
+            CourseSeeder::class
+        ]);
     }
 }

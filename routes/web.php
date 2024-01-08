@@ -47,6 +47,12 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
     Route::delete('/subject/{id}', [AdmissionController::class, 'delete_subject'])->name('admission.delete_subject');
     Route::get('/subject/{id}', [AdmissionController::class, 'get_subject'])->name('admission.get_subject');
     Route::post('/subject/{id}/edit', [AdmissionController::class, 'update_subject'])->name('admission.update_subject');
+
+    // Student
+    Route::get('/students', [AdmissionController::class, 'students_view'])->name('admission.students_view');
+    Route::get('/students/list', [AdmissionController::class, 'get_student'])->name('admission.get_student');
+    Route::get('/add_student', [AdmissionController::class, 'add_student_view'])->name('admission.add_student_view');
+    Route::post('/add_student', [AdmissionController::class, 'add_student'])->name('admission.add_student');
 });
 
 // Program Chairperson Routes

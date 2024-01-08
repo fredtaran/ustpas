@@ -92,6 +92,13 @@
                                     Courses
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('admission.students_view') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-user-alt"></i>
+                                    Students
+                                </a>
+                            </li>
                         </ul>
                     </nav>
                     <!-- /.sidebar-menu -->

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\Course;
 use App\Models\Subject;
 use App\Models\User;
+use App\Models\Student;
 
 class AdmissionController extends Controller
 {
@@ -163,5 +165,44 @@ class AdmissionController extends Controller
 
         // Refresh page
         return redirect()->route('admission.course_detail', $subject_data['course_id']);
+    }
+
+    // Students view
+    public function students_view() {
+        return view('admission.students');
+    }
+
+    // Get student list
+    public function get_student() {
+        $students = Student::with('course')->get();
+
+        return response()->json(['data' => $students]);
+    }
+
+    // Add student view
+    public function add_student_view() {
+        $courses = Course::all();
+
+        return view('admission.add_student')->with(['courses' => $courses]);
+    }
+
+    // Add student
+    public function add_student(Request $request) {
+        // Validate data
+        $data = $request->validate([
+            'student_id' => 'required|unique:students,student_id',
+            'first_name' => 'required',
+            'middle_name' => '',
+            'last_name' => 'required',
+            'suffix' => '',
+            'email' => 'required|unique:students,email',
+            'contact_number' => 'required|unique:students,contact_number',
+            'course_id' => 'required|exists:courses,id',
+            'year_level' => 'required',
+        ]);
+
+        if(Student::create($data)) {
+            return redirect()->route('admission.add_student_view');
+        }
     }
 }
