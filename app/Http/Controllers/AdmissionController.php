@@ -202,7 +202,66 @@ class AdmissionController extends Controller
         ]);
 
         if(Student::create($data)) {
-            return redirect()->route('admission.add_student_view');
+            return redirect()->route('admission.students_view');
         }
+    }
+
+    // Delete student
+    public function delete_student($id) {
+        $student = Student::findOrFail($id);
+        if($student->delete()) {
+            return response()->json(['message' => "Record has been deleted successfully"], 200);
+        } else {
+            return response()->json(['message' => "An errro has been encountered."], 500);
+        }
+    }
+
+    // Edit student view
+    public function edit_student($id) {
+        $student = Student::where('id', $id)->first();
+        $courses = Course::all();
+
+        return view('admission.edit_student')->with([
+            'student' => $student,
+            'courses' => $courses
+        ]);
+    }
+
+    // Save changes
+    public function save_student_changes(Request $request, $id) {
+        // Validate data
+        $data = $request->validate([
+            'student_id' => 'required',
+            'first_name' => 'required',
+            'middle_name' => '',
+            'last_name' => 'required',
+            'suffix' => '',
+            'email' => 'required',
+            'contact_number' => 'required',
+            'course_id' => 'required|exists:courses,id',
+            'year_level' => 'required',
+        ]);
+
+        $student = Student::findOrFail($id);
+
+        $student->student_id = $data['student_id'];
+        $student->first_name = $data['first_name'];
+        $student->middle_name = $data['middle_name'];
+        $student->last_name = $data['last_name'];
+        $student->suffix = $data['suffix'];
+        $student->email = $data['email'];
+        $student->contact_number = $data['contact_number'];
+        $student->course_id = $data['course_id'];
+        $student->year_level = $data['year_level'];
+        $student->save();
+
+        return redirect()->route('admission.students_view');
+    }
+
+    // Student detail
+    public function student_details($id) {
+        $student = Student::where('id', $id)->first();
+
+        dd($student);
     }
 }

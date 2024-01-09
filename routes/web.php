@@ -53,6 +53,10 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
     Route::get('/students/list', [AdmissionController::class, 'get_student'])->name('admission.get_student');
     Route::get('/add_student', [AdmissionController::class, 'add_student_view'])->name('admission.add_student_view');
     Route::post('/add_student', [AdmissionController::class, 'add_student'])->name('admission.add_student');
+    Route::delete('/student/{id}', [AdmissionController::class, 'delete_student'])->name('admission.delete_student');
+    Route::get('/student/{id}', [AdmissionController::class, 'edit_student'])->name('admission.edit_student_view');
+    Route::post('/student/{id}/edit', [AdmissionController::class, 'save_student_changes'])->name('admission.save_student_changes');
+    Route::get('/student/{id}/details', [AdmissionController::class, 'student_details'])->name('admission.student_details');
 });
 
 // Program Chairperson Routes

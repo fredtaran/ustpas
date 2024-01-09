@@ -42,13 +42,14 @@
 @section('page_custom_script')
 <script>
     $(function() {
+        // Data table initialize
         const tableStudents = $('#tbl_students').DataTable({
             ajax: "{{ route('admission.get_student') }}",
             columns: [
                 { 
-                    data: 'student_id',
+                    data: null,
                     render: function(data, type, row, meta) {
-                        return '<a href="#">' + data + '</a>'
+                        return `<a href="{{ url('admission/student') }}/` + data.id + `/details">` + data.student_id + `</a>`
                     }
                 },
                 { 
@@ -67,7 +68,8 @@
                 { 
                     data: 'id',
                     render: function(data, type, row, meta) {
-                        return '<a href="#" class="btn btn-primary btn-sm" title="Edit"><i class="fa fa-edit"></i></a> <button type="button" class="btn btn-warning btn-sm deleteCourseBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>'
+                        return `<a href="{{ url('admission/student') }}/` + data + `" class="btn btn-primary btn-sm" title="Edit"><i class="fa fa-edit"></i></a>
+                        <button type="button" class="btn btn-warning btn-sm deleteCourseBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>`
                     }
                 }
             ],
@@ -75,6 +77,44 @@
             lengthChange: false, 
             autoWidth: false,
         });
+
+        // Delete button
+        tableStudents.on('click', '.deleteCourseBtn', function() {
+            var data = tableStudents.row($(this).parents('tr')).data();
+            Swal.fire({
+                title: "Delete Confirmation",
+                text: "Are you sure you want to delete this record?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: "Yes, delete!",
+                cancelButtonText: "Cancel"
+            }).then(function(result) {
+                if(result.value) {
+                    $.ajax({
+                        url: "{{ url('/admission/student') }}/" + data.id,
+                        type: "DELETE",
+                        dataType: 'json',
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: "Success Message",
+                                text: response.message,
+                                icon: "info"
+                            });
+
+                            tableStudents.ajax.reload();
+                        },
+                        error: function(xhr, response, error) {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        })
     })
 </script>
 @endsection
