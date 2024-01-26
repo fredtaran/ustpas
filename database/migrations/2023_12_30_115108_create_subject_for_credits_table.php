@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreign('subject_id')->references('id')->on('subjects')->cascadeOnUpdate()->restrictOnDelete();
             $table->unsignedBigInteger('code_id');
             $table->foreign('code_id')->references('id')->on('codes')->cascadeOnUpdate()->restrictOnDelete();
-            $table->double('grade', 2, 2);
-            $table->enum('status', [1, 2, 3]); // 1 - Pending, 2 - Approved, 3 - Reject
+            $table->float('grade', 3, 2);
+            $table->unsignedInteger('status')->default(1); // 1 - Pending, 2 - Approved, 3 - Reject
             $table->timestamps();
         });
     }

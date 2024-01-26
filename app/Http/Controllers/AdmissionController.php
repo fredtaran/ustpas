@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+
+use Mail;
+use App\Mail\NotifyChairperson;
 
 use App\Models\Course;
 use App\Models\Subject;
 use App\Models\User;
 use App\Models\Student;
 use App\Models\Tor;
+use App\Models\Code;
+use App\Models\SubjectForCredit;
 
 class AdmissionController extends Controller
 {
@@ -358,19 +366,14 @@ class AdmissionController extends Controller
                     // Check if the units is the same
                     if($grade_unit[1] == $subject->unit) {
                         // Check if the grade pass
+                        if($grade_unit[0] <= 3) {
+                            // If grade is pass, add data to array for subject to be credited
+                            $data = array(
+                                'subject_id' => $subject->id,
+                                'grade' => $grade_unit[0]
+                            );
+                        }
                     }
-
-                    // foreach($grade_unit as $grade_data) {
-                    //     if(is_numeric($grade_data)) {
-                    //         echo '<pre>';
-                    //         var_dump($grade_data);
-                    //         echo '<pre>';
-                    //     }
-                    // }
-
-                    $data = array(
-                        'subject_id' => $subject->id,
-                    );
 
                     array_push($subjects_to_be_credited_formatted, $data);
                 }
@@ -384,6 +387,36 @@ class AdmissionController extends Controller
             return $value !== [];
         });
 
-        // dd($filterSubjects);
+        // // Generate code to be sent to the student; format: minutes-seconds-6 random digits
+        // $reference_code = Carbon::now()->format('is') . "" . rand(100000,999999);
+
+        // // Save the new generated code
+        // $new_code = Code::create(['code' => $reference_code]);
+        
+        // // Prepare the data to be save to credited_subject_table
+        // $convert_subject_to_collection = collect($filterSubjects);
+        // $data_for_saving = $convert_subject_to_collection->map(function($item) use ($student_id, $new_code) {
+        //     $item[0]['student_id'] = $student_id;
+        //     $item[0]['code_id'] = $new_code->id;
+        //     return $item;
+        // });
+
+        // // Save subjects for program chair approval
+        // foreach($data_for_saving as $subject) {
+        //     SubjectForCredit::create($subject[0]);
+        // }
+
+        // Retrieve chairperson email
+        $chairperson = DB::table('subject_for_credits')
+                        ->join('subjects', 'subject_for_credits.subject_id', '=', 'subjects.id')
+                        ->join('courses', 'subjects.course_id', '=', 'courses.id')
+                        ->join('users', 'courses.chairperson_id', '=', 'users.id')
+                        ->where('subject_for_credits.student_id', $student_id)
+                        ->select('users.*') // Include users.id in the SELECT statement
+                        ->first();
+                        
+        Mail::to($chairperson->email)->send(new NotifyChairperson($chairperson));
+        dd('Mail sent successfully');
+
     }
 }
