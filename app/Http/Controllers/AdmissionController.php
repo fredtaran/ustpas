@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 use Mail;
 use App\Mail\NotifyChairperson;
+use App\Mail\NotifyStudent;
 
 use App\Models\Course;
 use App\Models\Subject;
@@ -372,10 +373,10 @@ class AdmissionController extends Controller
                                 'subject_id' => $subject->id,
                                 'grade' => $grade_unit[0]
                             );
+
+                            array_push($subjects_to_be_credited_formatted, $data);
                         }
                     }
-
-                    array_push($subjects_to_be_credited_formatted, $data);
                 }
             }
 
@@ -387,36 +388,66 @@ class AdmissionController extends Controller
             return $value !== [];
         });
 
-        // // Generate code to be sent to the student; format: minutes-seconds-6 random digits
-        // $reference_code = Carbon::now()->format('is') . "" . rand(100000,999999);
+        if(empty($filterSubjects)) {
+            // Update TOR to set the map column to TRUE
+            $tor->map = 1;
+            $tor->save();
 
-        // // Save the new generated code
-        // $new_code = Code::create(['code' => $reference_code]);
-        
-        // // Prepare the data to be save to credited_subject_table
-        // $convert_subject_to_collection = collect($filterSubjects);
-        // $data_for_saving = $convert_subject_to_collection->map(function($item) use ($student_id, $new_code) {
-        //     $item[0]['student_id'] = $student_id;
-        //     $item[0]['code_id'] = $new_code->id;
-        //     return $item;
-        // });
+            return response()->json([
+                'message'   =>  'No subject to be assess for accreditation.'
+            ]);
+        } else {
+            // Generate code to be sent to the student; format: minutes-seconds-6 random digits
+            $reference_code = Carbon::now()->format('is') . "" . rand(100000,999999);
 
-        // // Save subjects for program chair approval
-        // foreach($data_for_saving as $subject) {
-        //     SubjectForCredit::create($subject[0]);
-        // }
+            // Save the new generated code
+            $new_code = Code::create(['code' => $reference_code]);
 
-        // Retrieve chairperson email
-        $chairperson = DB::table('subject_for_credits')
-                        ->join('subjects', 'subject_for_credits.subject_id', '=', 'subjects.id')
-                        ->join('courses', 'subjects.course_id', '=', 'courses.id')
-                        ->join('users', 'courses.chairperson_id', '=', 'users.id')
-                        ->where('subject_for_credits.student_id', $student_id)
-                        ->select('users.*') // Include users.id in the SELECT statement
-                        ->first();
-                        
-        Mail::to($chairperson->email)->send(new NotifyChairperson($chairperson));
-        dd('Mail sent successfully');
+            // Prepare the data to be save to credited_subject_table
+            $convert_subject_to_collection = collect($filterSubjects);
+            $data_for_saving = $convert_subject_to_collection->map(function($item) use ($student_id, $new_code) {
+                $item[0]['student_id'] = $student_id;
+                $item[0]['code_id'] = $new_code->id;
+                return $item;
+            });
 
+            // Save subjects for program chair approval
+            foreach($data_for_saving as $subject) {
+                SubjectForCredit::create($subject[0]);
+            }
+
+            // Retrieve chairperson email
+            $chairperson = DB::table('subject_for_credits')
+                            ->join('subjects', 'subject_for_credits.subject_id', '=', 'subjects.id')
+                            ->join('courses', 'subjects.course_id', '=', 'courses.id')
+                            ->join('users', 'courses.chairperson_id', '=', 'users.id')
+                            ->where('subject_for_credits.student_id', $student_id)
+                            ->select('users.*') // Include users.id in the SELECT statement
+                            ->first();
+
+            // // Notify Chairperson
+            Mail::to($chairperson->email)->send(new NotifyChairperson($chairperson));
+
+            // Notify Student
+            Mail::to($student->email)->send(new NotifyStudent($student, $new_code));
+
+            // Update TOR to set the map column to TRUE
+            $tor->map = 1;
+            $tor->save();
+
+            return response()->json([
+                'message'   =>  'Subject mapped successfully.'
+            ]);
+        }
+
+    }
+
+    // Get all subject for credit
+    public function get_subject_for_credit($student_id) {
+        $subjects_for_credit = SubjectForCredit::with('subject')->get();
+
+        return response()->json([
+            'data' => $subjects_for_credit
+        ]);
     }
 }

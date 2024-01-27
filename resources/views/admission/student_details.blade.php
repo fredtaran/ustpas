@@ -198,7 +198,11 @@
                 { 
                     data: null,
                     render: function(data, type, row, meta) {
-                        return `<button type="button" class="btn btn-primary btn-sm mapTorBtn" title="Map Data"><i class="fa fa-spinner"></i></button> <button type="button" class="btn btn-warning btn-sm deleteTorBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>`
+                        if(data.map) {
+                            return `<button type="button" class="btn btn-primary btn-sm mapTorBtn" title="Map Data" disabled><i class="fa fa-spinner"></i></button> <button type="button" class="btn btn-warning btn-sm deleteTorBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>`
+                        } else {
+                            return `<button type="button" class="btn btn-primary btn-sm mapTorBtn" title="Map Data"><i class="fa fa-spinner"></i></button> <button type="button" class="btn btn-warning btn-sm deleteTorBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>`
+                        }
                     }
                 }
             ],
@@ -209,6 +213,39 @@
 
         // Accreditation Table
         const tableAccre = $('#tbl_accre').DataTable({
+            ajax: "{{ url('admission/subjects_for_credit') }}/{{ $student->id }}",
+            columns: [
+                { 
+                    data: 'subject',
+                    render: function(data, type, row, meta) {
+                        return data.subject_code;
+                    }
+                },
+                {
+                    data: 'subject',
+                    render: function(data, type, row, meta) {
+                        return data.subject_description;
+                    }
+                },
+                { 
+                    data: 'status',
+                    render: function(data, type, row, meta) {
+                        if(data == 1) {
+                            return '<span class="badge badge-secondary">Pending</span>';
+                        } else if (data == 2) {
+                            return '<span class="badge badge-success">Approved</span>';
+                        } else if(data == 3) {
+                            return '<span class="badge badge-danger">Denied</span>';
+                        }
+                    }
+                },
+                {
+                    data: 'created_at',
+                    render: function(data, type, row, meta) {
+                        return moment().format('L');
+                    }
+                },
+            ],
             responsive: true, 
             lengthChange: false, 
             autoWidth: false,
@@ -296,12 +333,23 @@
         // Map TOR data
         tableTor.on('click', 'td button.mapTorBtn', function() {
             var data = tableTor.row($(this).parents('tr')).data();
+            Swal.fire({
+                title: "Please wait for a while.",
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             $.ajax({
                 url: "{{ url('admission/tor') }}/" + data.id + "/" + data.student_id,
                 type: "GET",
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
+                    Swal.fire({
+                        title: "",
+                        text: response.message,
+                        icon: "info"
+                    });
                 },
                 error: function(xhr, errStatus, error) {
                     console.log(error);

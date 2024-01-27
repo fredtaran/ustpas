@@ -61,6 +61,7 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
     Route::get('/get_tors/{id}', [AdmissionController::class, 'get_tors'])->name('admission.get_tors');
     Route::delete('/tor/{id}', [AdmissionController::class, 'delete_tor'])->name('admission.delete_tor');
     Route::get('/tor/{student_id}/{tor_id}', [AdmissionController::class, 'map_data'])->name('admission.map_data');
+    Route::get('/subjects_for_credit/{student_id}', [AdmissionController::class, 'get_subject_for_credit'])->name('admission.get_subject_for_credit');
 });
 
 // Program Chairperson Routes

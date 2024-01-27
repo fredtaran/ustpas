@@ -9,19 +9,20 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class NotifyChairperson extends Mailable
+class NotifyStudent extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $body;
+    public $student, $code;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($body)
+    public function __construct($student, $code)
     {
         //
-        $this->body = $body;
+        $this->student  = $student;
+        $this->code     = $code;
     }
 
     /**
@@ -31,8 +32,11 @@ class NotifyChairperson extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.NotifyChairperson')
-                    ->subject('Accreditation for your assessment')
-                    ->with('body', $this->body);
+        return $this->markdown('emails.NotifyStudent')
+                    ->subject('Subject Accreditation')
+                    ->with([
+                        'student'   => $this->student,
+                        'code'      => $this->code
+                    ]);
     }
 }

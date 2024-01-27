@@ -16,4 +16,8 @@ class SubjectForCredit extends Model
         'grade',
         'status'
     ];
+
+    public function subject() {
+        return $this->belongsTo(Subject::class);
+    }
 }

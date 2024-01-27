@@ -14,14 +14,26 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        \App\Models\User::create([
-            'first_name' => 'Fred',
-            'last_name' => 'Taran',
-            'email' => 'ftaran04@gmail.com',
-            'username' => 'fred.taran',
-            'role' => 1,
-            'password' => bcrypt('@dmin123'),
-        ]);
+        $data = [
+            [
+                'first_name' => 'April Rose',
+                'last_name' => 'Legaspi',
+                'email' => 'ftaran100411@gmail.com',
+                'username' => 'aprilrose.legaspi',
+                'role' => 1,
+                'password' => bcrypt('@dmin123'),
+            ],
+            [
+                'first_name' => 'Fred',
+                'last_name' => 'Taran',
+                'email' => 'ftaran04@gmail.com',
+                'username' => 'fred.taran',
+                'role' => 1,
+                'password' => bcrypt('@dmin123'),
+            ]
+        ];
+
+        \App\Models\User::insert($data);
 
         $this->call([
             CourseSeeder::class,
