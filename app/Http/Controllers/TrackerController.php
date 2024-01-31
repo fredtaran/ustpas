@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\Code;
 use App\Models\SubjectForCredit;
@@ -23,5 +24,14 @@ class TrackerController extends Controller
         return response()->json([
             'data' => $subjects
         ]);        
+    }
+
+    public function generate_pdf() {
+        $data = [
+            'title'
+        ];
+
+        $pdf = Pdf::loadView('pdf.sample', $data);
+        return $pdf->stream('sample.pdf');
     }
 }
