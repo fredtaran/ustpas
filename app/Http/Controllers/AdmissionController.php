@@ -359,6 +359,8 @@ class AdmissionController extends Controller
                 $subject_remove_stopwords = str_replace($stopwords, " ", $subject_low_case); //remove stopwords from extracted student data
 
                 if(str_contains($tor_raw_remove_stopwords, $subject_remove_stopwords)) {
+                    $old_subject_code = explode(" ", $tor_raw_low_case, 3);
+
                     // Clean data
                     $clean_tor_data = strstr($tor_raw_remove_stopwords, $subject_remove_stopwords); // Remove the tor data subject/course code
                     $clean_grade_unit = trim(preg_replace('/[^\d.-]+/', ' ', str_replace($subject_remove_stopwords, "", $clean_tor_data))); // Remove everything except digits, dots, and optionally a single leading or trailing minus sign. Also remove the leading or trailing space
@@ -371,7 +373,9 @@ class AdmissionController extends Controller
                             // If grade is pass, add data to array for subject to be credited
                             $data = array(
                                 'subject_id' => $subject->id,
-                                'grade' => $grade_unit[0]
+                                'grade' => $grade_unit[0],
+                                'subject_title_to_be_credited' => ucwords($subject_low_case),
+                                'subject_code_to_be_credited' => $old_subject_code[0] . " " . $old_subject_code[1]
                             );
 
                             array_push($subjects_to_be_credited_formatted, $data);
@@ -379,7 +383,6 @@ class AdmissionController extends Controller
                     }
                 }
             }
-
             return $subjects_to_be_credited_formatted;
         });
 
@@ -387,6 +390,8 @@ class AdmissionController extends Controller
         $filterSubjects = array_filter($subjects_to_be_credited->toArray(), function ($value) {
             return $value !== [];
         });
+
+        // dd($filterSubjects);
 
         if(empty($filterSubjects)) {
             // Update TOR to set the map column to TRUE

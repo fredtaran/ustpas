@@ -14,7 +14,9 @@ class SubjectForCredit extends Model
         'subject_id',
         'code_id',
         'grade',
-        'status'
+        'status',
+        'subject_code_to_be_credited',
+        'subject_title_to_be_credited'
     ];
 
     public function subject() {

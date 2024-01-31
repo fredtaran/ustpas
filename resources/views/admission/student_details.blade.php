@@ -145,7 +145,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4>Subject for Accreditation</h4>
+                        <h4>Subject to be Accredited</h4>
 
                         <table class="table table-bordered table-hovered text-center" id="tbl_accre">
                             <thead>
@@ -350,6 +350,9 @@
                         text: response.message,
                         icon: "info"
                     });
+
+                    tableTor.ajax.reload();
+                    tableAccre.ajax.reload();
                 },
                 error: function(xhr, errStatus, error) {
                     console.log(error);

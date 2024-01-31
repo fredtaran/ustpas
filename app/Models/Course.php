@@ -18,4 +18,8 @@ class Course extends Model
     public function chairperson() {
         return $this->hasMany(User::class, 'id', 'chairperson_id');
     }
+
+    public function subject() {
+        return $this->hasMany(Subject::class, 'course_id', 'id');
+    }
 }

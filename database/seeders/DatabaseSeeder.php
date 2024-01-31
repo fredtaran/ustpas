@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
                 'last_name' => 'Legaspi',
                 'email' => 'ftaran100411@gmail.com',
                 'username' => 'aprilrose.legaspi',
-                'role' => 1,
+                'role' => 2,
                 'password' => bcrypt('@dmin123'),
             ],
             [

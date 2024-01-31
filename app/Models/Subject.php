@@ -19,4 +19,8 @@ class Subject extends Model
     public function course() {
         return $this->hasMany(Course::class, 'id', 'course_id');
     }
+
+    public function subjectForCredit() {
+        return $this->hasMany(SubjectForCredit::class, 'subject_id', 'id');
+    }
 }

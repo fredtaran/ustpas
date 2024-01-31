@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\AdmissionController;
 use App\Http\Controllers\ChairpersonController;
+use App\Http\Controllers\TrackerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,8 @@ use App\Http\Controllers\ChairpersonController;
 */
 
 // Authentication Routes
+Route::middleware(['guest'])->get('/', [TrackerController::class, 'landing_page'])->name('tracker.landing_page');
+Route::middleware(['guest'])->get('/get_status/{code}', [TrackerController::class, 'get_accredited_subjects'])->name('tracker.get_accredited_subjects');
 Route::middleware(['guest'])->get('/login', [AuthenticationController::class, 'login_view'])->name('login.view');
 Route::middleware(['guest'])->post('/login', [AuthenticationController::class, 'login_authenticate'])->name('login.authenticate');
 Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout');
@@ -67,4 +70,8 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
 // Program Chairperson Routes
 Route::middleware(['auth', 'checkRoles:2'])->prefix('chairperson')->group(function() {
     Route::get('', [ChairpersonController::class, 'dashboard'])->name('chairperson.dashboard');
+    Route::get('/students', [ChairpersonController::class, 'get_students'])->name('chairperson.get_students');
+    Route::get('/student/{student_id}', [ChairpersonController::class, 'get_student'])->name('chairperson.get_student');
+    Route::get('/student/{student_id}/subjects', [ChairpersonController::class, 'get_subjects_for_accreditation'])->name('chairperson.get_subjects_for_accreditation');
+    Route::put('/accredit/{accreditation_id}/{status}', [ChairpersonController::class, 'update_status'])->name('chairperson.update_status');
 });
