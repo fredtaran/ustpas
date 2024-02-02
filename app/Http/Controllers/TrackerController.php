@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\Code;
 use App\Models\SubjectForCredit;
+use App\Models\Student;
 
 class TrackerController extends Controller
 {
@@ -26,12 +27,17 @@ class TrackerController extends Controller
         ]);        
     }
 
-    public function generate_pdf() {
+    public function generate_pdf($tracking_code) {
+        $code = Code::where('code', $tracking_code)->first();
+        $creditedSubjects = SubjectForCredit::with('subject.course.chairperson')->where('code_id', $code->id)->get();
+        $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
+
         $data = [
-            'title'
+            'student' => $student,
+            'creditedSubjects' => $creditedSubjects,
         ];
 
-        $pdf = Pdf::loadView('pdf.sample', $data);
+        $pdf = Pdf::loadView('pdf.pdf_template', $data);
         return $pdf->stream('sample.pdf');
     }
 }

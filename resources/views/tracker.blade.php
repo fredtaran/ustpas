@@ -34,7 +34,7 @@
                         <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
                         <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocomplete="off" placeholder="Enter tracking code" id="tracking_code">
+                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code" value="4803442855">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                             </div>
@@ -43,6 +43,8 @@
 
                     <div class="card" id="student_data" style="display: none;">
                         <div class="card-body">
+                            <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2"><i class="fa fa-print"></i> Print</a>
+
                             <table class="table table-bordered text-center" id="student_data_tbl">
                                 <thead>
                                     <tr>
@@ -85,6 +87,7 @@
 
         <script>
             $(function() {
+                // Search Button
                 $('#searchBtn').on('click', function() {
                     if($('#tracking_code').val() == "") {
                         alert('Enter tracking code');
@@ -126,10 +129,13 @@
                                     }
                                 }
                                 $('#student_data_tbl tbody').html(html);
+
+                                // Print Button
+                                $('#printBtn').attr('href', `{{ url('/generate_pdf') }}/${$('#tracking_code').val()}`);
                             },
                             error: function(xhr, errorStatus, error) {
                                 $('#student_data').css('display', 'none');
-                                alert("No data found pertaining the tracking code " + $('#tracking_code').val());
+                                alert("No data found pertaining the tracking code: " + $('#tracking_code').val());
                             }
                         });
                     }

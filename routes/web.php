@@ -22,7 +22,7 @@ use App\Http\Controllers\TrackerController;
 // Authentication Routes
 Route::middleware(['guest'])->get('/', [TrackerController::class, 'landing_page'])->name('tracker.landing_page');
 Route::middleware(['guest'])->get('/get_status/{code}', [TrackerController::class, 'get_accredited_subjects'])->name('tracker.get_accredited_subjects');
-Route::middleware(['guest'])->get('/generate_pdf', [TrackerController::class, 'generate_pdf'])->name('tracker.generate_pdf');
+Route::middleware(['guest'])->get('/generate_pdf/{code}', [TrackerController::class, 'generate_pdf'])->name('tracker.generate_pdf');
 Route::middleware(['guest'])->get('/login', [AuthenticationController::class, 'login_view'])->name('login.view');
 Route::middleware(['guest'])->post('/login', [AuthenticationController::class, 'login_authenticate'])->name('login.authenticate');
 Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout');

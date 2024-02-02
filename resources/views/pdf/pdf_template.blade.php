@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Generate Laravel TCPDF by codeanddeploy.com</title>
+        <title>{{ $student->last_name }}, {{ $student->first_name }}</title>
         <style>
             table {
                 border-collapse: collapse;
+                width: 100%;
             }
 
             table, th, td {
@@ -101,22 +102,26 @@
         <table style="margin-top: 25px;">
             <tbody>
                 <tr>
-                    <td style="text-align: left; padding-right: 10px;">Name ______________________________________</td>
-                    <td style="text-align: left;">Student ID No. _____________________________</td>
+                    @if ($student->suffix == '')
+                    <td style="text-align: left; padding-right: 10px; width: 50%">Name: <span style="text-decoration: underline;">{{ $student->last_name }}, {{ $student->first_name }} {{ $student->middle_name }}</span></td>
+                    @else
+                    <td style="text-align: left; padding-right: 10px; width: 50%">Name: <span style="text-decoration: underline;">{{ $student->last_name }}, {{ $student->first_name }} {{ $student->suffix }} {{ $student->middle_name }}</span></td>   
+                    @endif
+                    <td style="text-align: left; width: 50%">Student ID No. <span style="text-decoration: underline;">{{ $student->student_id }}</span></td>
                 </tr>
 
                 <tr>
-                    <td style="text-align: left; padding-right: 10px;">Course & Year _______________________________</td>
-                    <td style="text-align: left;">Major (if any) ______________________________</td>
+                    <td style="text-align: left; padding-right: 10px; width: 50%">Course & Year: <span style="text-decoration: underline;">{{ $student->course[0]->course_code }} - {{ $student->year_level }}</span></td>
+                    <td style="text-align: left; width: 50%">Major (if any): ______________________________</td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" style="text-align: left;">Name of School last attended _______________________________________________________________</td>
+                    <td colspan="2" style="text-align: left;">Name of School last attended: ______________________________________________________________</td>
                 </tr>
 
                 <tr>
-                    <td style="text-align: left; padding-right: 10px;">Previous Course ______________________________</td>
-                    <td style="text-align: left;">Period of Attendance ________________________</td>
+                    <td style="text-align: left; padding-right: 10px; width: 50%">Previous Course: ____________________________</td>
+                    <td style="text-align: left; width: 50%">Period of Attendance: ________________________</td>
                 </tr>
             </tbody>
         </table>
@@ -137,7 +142,29 @@
                 </tr>
             </thead>
             <tbody>
-                @for ($i = 1; $i <= 13; $i++)
+                @foreach ($creditedSubjects as $subject)
+                <tr>
+                    <td>{{ $subject->subject_code_to_be_credited }}</td>
+                    <td>{{ $subject->subject_title_to_be_credited }}</td>
+                    <td>{{ $subject->subject->unit }}</td>
+                    <td>{{ $subject->subject->subject_code }} - {{ $subject->subject->subject_description }}</td>
+                    @if ($subject->status == 1)
+                    <td>Pending</td>
+                    @elseif ($subject->status == 2)
+                    <td>Approved</td>
+                    @elseif ($subject->status == 3)
+                    <td>Denied</td>
+                    @endif
+                    
+                    @foreach ($subject->subject->course as $course)
+                        @foreach ($course->chairperson as $chairperson)
+                        <td>{{ $chairperson->last_name }}, {{ $chairperson->first_name }}</td>                            
+                        @endforeach
+                    @endforeach
+                </tr>
+                @endforeach
+
+                @for ($i = 1; $i <= 10 - $creditedSubjects->count(); $i++)
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
@@ -150,7 +177,7 @@
             </tbody>
         </table>
 
-        <table style="width: 100%; margin-top: 15px;">
+        <table style="margin-top: 15px;">
             <tbody>
                 <tr>
                     <td style="width: 50%">&nbsp;</td>
@@ -219,7 +246,7 @@
         <hr style="border: 1px dashed black;">
         <p style="font-weight: bold; font-size: 14px; text-align: center;">To be filled out by the Registrar staff</p>
 
-        <table style="width: 100%">
+        <table>
             <tbody>
                 <tr>
                     <td style="width: 75%">Accreditation form received by: _____________________________</td>
