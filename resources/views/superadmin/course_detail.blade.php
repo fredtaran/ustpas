@@ -48,7 +48,7 @@
                         </button>
                     </div>
 
-                    <form action="{{ route('admission.save_subject') }}" method="POST" id="addSubject_form">
+                    <form action="{{ route('superadmin.save_subject') }}" method="POST" id="addSubject_form">
                         <div class="modal-body">
                                 @csrf
                                 <div class="form-group">
@@ -138,7 +138,7 @@
 $(function() {
     // Initialize datatable
     const subjectTable = $("#tbl_subjects").DataTable({
-        ajax: "{{ url('/admission/subjects') }}/" + {{ $course[0]->id }},
+        ajax: "{{ url('/superadmin/subjects') }}/" + {{ $course[0]->id }},
         columns: [
             { 
                 data: 'subject_code',
@@ -175,7 +175,7 @@ $(function() {
         }).then(function(result) {
             if(result.value) {
                 $.ajax({
-                    url: "{{ url('/admission/subject/') }}/" + data.id,
+                    url: "{{ url('/superadmin/subject/') }}/" + data.id,
                     type: "DELETE",
                     dataType: 'json',
                     data: {
@@ -205,12 +205,12 @@ $(function() {
 
         // Retrieve data
         $.ajax({
-            url: "{{ url('/admission/subject') }}/" + data.id,
+            url: "{{ url('/superadmin/subject') }}/" + data.id,
             type: "GET",
             dataType: 'json',
             success: function(response) {
                 // Show modal
-                $('#editSubject_form').attr('action', "{{ url('/admission/subject') }}/" + data.id + "/edit");
+                $('#editSubject_form').attr('action', "{{ url('/superadmin/subject') }}/" + data.id + "/edit");
                 $('#modal-editSubject').modal('show');
                 $('#edit_subject_code').val(response.subject.subject_code);
                 $('#edit_description').val(response.subject.subject_description);

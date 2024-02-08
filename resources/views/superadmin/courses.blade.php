@@ -10,7 +10,7 @@
 
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('admission.dashboard') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('superadmin.dashboard') }}">Home</a></li>
             <li class="breadcrumb-item active">Courses</li>
         </ol>
     </div><!-- /.col -->
@@ -46,7 +46,7 @@
                         </button>
                     </div>
 
-                    <form action="{{ route('admission.save_course') }}" method="POST" id="newCourse_form">
+                    <form action="{{ route('superadmin.save_course') }}" method="POST" id="newCourse_form">
                         <div class="modal-body">
                                 @csrf
                                 <div class="form-group">
@@ -238,14 +238,18 @@
 
     // DataTable setup
     const courseTable = $("#tbl_courses").DataTable({
-        ajax: "{{ route('admission.course_list') }}",
+        ajax: "{{ route('superadmin.course_list') }}",
         columns: [
             { data: 'course_code', render: function(data, type, row, meta) {
-                return '<a href="{{ url('/admission/course/') }}/' + row.id + '">' + data + '</a>';
+                return '<a href="{{ url('/superadmin/course/') }}/' + row.id + '">' + data + '</a>';
             }},
             { data: 'course_name' },
             { data: 'chairperson', render: function(data, type, row, meta) {
-                return data[0].first_name + " " + (data[0].middle_name == null ? "" : data[0].middle_name[0] + ".") + " " + data[0].last_name + " " + (data[0].suffix == null ? "" : data[0].suffix)
+                if(data == '') {
+                    return "-"
+                } else {
+                    return data[0].first_name + " " + (data[0].middle_name == null ? "" : data[0].middle_name[0] + ".") + " " + data[0].last_name + " " + (data[0].suffix == null ? "" : data[0].suffix)
+                }
             }},
             { data: 'id', render: function(data, type, row, meta) {
                 return '<button type="button" class="btn btn-primary btn-sm editCourseBtn" title="Edit"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-warning btn-sm deleteCourseBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>'
@@ -256,8 +260,6 @@
         autoWidth: false,
     });
 
-    
-    
     // Delete button function
     courseTable.on('click', 'td button.deleteCourseBtn', function() {
         var data = courseTable.row($(this).parents('tr')).data();
@@ -273,7 +275,7 @@
         }).then(function(result) {
             if(result.value) {
                 $.ajax({
-                    url: "{{ url('/admission/courses') }}/" + data.id,
+                    url: "{{ url('/superadmin/courses') }}/" + data.id,
                     type: "DELETE",
                     dataType: 'json',
                     data: {
@@ -302,12 +304,12 @@
 
         // Retrieve data
         $.ajax({
-            url: "{{ url('/admission/courses') }}/" + data.id,
+            url: "{{ url('/superadmin/courses') }}/" + data.id,
             type: "GET",
             dataType: 'json',
             success: function(response) {
                 // Show modal
-                $('#editCourse_form').attr('action', "{{ url('/admission/courses') }}/" + data.id + "/edit");
+                $('#editCourse_form').attr('action', "{{ url('/superadmin/courses') }}/" + data.id + "/edit");
                 $('#modal-editCourses').modal('show');
                 $('#edit_course_name').val(response.course.course_name);
                 $('#edit_course_code').val(response.course.course_code);

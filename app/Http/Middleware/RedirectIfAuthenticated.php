@@ -24,7 +24,7 @@ class RedirectIfAuthenticated
                 // return redirect(RouteServiceProvider::ADMISSION);
                 // Check roles of the user authenticated
                 if(Auth::user()->role == 0) {
-
+                    return redirect()->intended('/superadmin');
                 } else if(Auth::user()->role == 1) {
                     return redirect()->intended('/admission');
                 } else if(Auth::user()->role == 2) {

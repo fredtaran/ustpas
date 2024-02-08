@@ -79,22 +79,29 @@
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     Dashboard
                                 </a>
-                                @else
+                                @elseif (Auth::user()->role == 2)
                                 <a href="{{ route('chairperson.dashboard') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    Dashboard
+                                </a>
+                                @elseif (Auth::user()->role == 0)
+                                <a href="{{ route('superadmin.dashboard') }}" class="nav-link">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     Dashboard
                                 </a>
                                 @endif
                             </li>
 
-                            @if (Auth::user()->role == 1)
+                            @if (Auth::user()->role == 0)
                             <li class="nav-item">
-                                <a href="{{ route('admission.courses_view') }}" class="nav-link">
+                                <a href="{{ route('superadmin.courses_view') }}" class="nav-link">
                                     <i class="nav-icon fas fa-list"></i>
                                     Courses
                                 </a>
                             </li>
+                            @endif
 
+                            @if (Auth::user()->role == 1)
                             <li class="nav-item">
                                 <a href="{{ route('admission.students_view') }}" class="nav-link">
                                     <i class="nav-icon fas fa-user-alt"></i>

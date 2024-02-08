@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('course_name');
             $table->string('course_code');
-            $table->unsignedBigInteger('chairperson_id');
+            $table->unsignedBigInteger('chairperson_id')->nullable();
             $table->timestamps();
 
-            $table->foreign('chairperson_id')->references('id')->on('users')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreign('chairperson_id')->references('id')->on('users')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

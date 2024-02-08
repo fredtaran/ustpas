@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\AdmissionController;
 use App\Http\Controllers\ChairpersonController;
 use App\Http\Controllers\TrackerController;
+use App\Http\Controllers\SuperAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,26 +33,6 @@ Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function
     // Dashboard
     Route::get('', [AdmissionController::class, 'dashboard'])->name('admission.dashboard');
 
-    // Course
-    Route::get('/courses', [AdmissionController::class, 'courses'])->name('admission.courses_view');
-    Route::post('/courses', [AdmissionController::class, 'save_course'])->name('admission.save_course');
-    Route::delete('/courses/{id}', [AdmissionController::class, 'delete_course'])->name('admission.delete_course');
-    Route::post('/courses/{id}/edit', [AdmissionController::class, 'update_course'])->name('admission.update_course');
-    Route::get('/course/{id}', [AdmissionController::class, 'course_detail'])->name('admission.course_detail');
-
-    // Use by datatable - return json
-    Route::get('/course_list', [AdmissionController::class, 'courses_table'])->name('admission.course_list');
-
-    // Use by update  modal - return json
-    Route::get('/courses/{id}', [AdmissionController::class, 'get_course'])->name('admission.get_course');
-
-    // Subject
-    Route::post('/subjects', [AdmissionController::class, 'save_subject'])->name('admission.save_subject');
-    Route::get('/subjects/{id}', [AdmissionController::class, 'get_subjects'])->name('admission.get_subjects');
-    Route::delete('/subject/{id}', [AdmissionController::class, 'delete_subject'])->name('admission.delete_subject');
-    Route::get('/subject/{id}', [AdmissionController::class, 'get_subject'])->name('admission.get_subject');
-    Route::post('/subject/{id}/edit', [AdmissionController::class, 'update_subject'])->name('admission.update_subject');
-
     // Student
     Route::get('/students', [AdmissionController::class, 'students_view'])->name('admission.students_view');
     Route::get('/students/list', [AdmissionController::class, 'get_student'])->name('admission.get_student');
@@ -75,4 +56,31 @@ Route::middleware(['auth', 'checkRoles:2'])->prefix('chairperson')->group(functi
     Route::get('/student/{student_id}', [ChairpersonController::class, 'get_student'])->name('chairperson.get_student');
     Route::get('/student/{student_id}/subjects', [ChairpersonController::class, 'get_subjects_for_accreditation'])->name('chairperson.get_subjects_for_accreditation');
     Route::put('/accredit/{accreditation_id}/{status}', [ChairpersonController::class, 'update_status'])->name('chairperson.update_status');
+});
+
+// Superadmin
+Route::middleware(['auth', 'checkRoles:0'])->prefix('superadmin')->group(function() {
+    Route::get('', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
+
+    // Users
+    Route::get('/get_users', [SuperAdminController::class, 'get_users'])->name('superadmin.get_users');
+    Route::delete('/user/{user_id}', [SuperAdminController::class, 'delete_user'])->name('superadmin.delete_user');
+
+    // Course
+    Route::get('/courses', [SuperAdminController::class, 'courses'])->name('superadmin.courses_view');
+    Route::get('/course_list', [SuperAdminController::class, 'courses_table'])->name('superadmin.course_list');
+    Route::post('/courses', [SuperAdminController::class, 'save_course'])->name('superadmin.save_course');
+    Route::get('/course/{id}', [SuperAdminController::class, 'course_detail'])->name('superadmin.course_detail');
+    Route::get('/courses/{id}', [SuperAdminController::class, 'get_course'])->name('superadmin.get_course');
+    Route::post('/courses/{id}/edit', [SuperAdminController::class, 'update_course'])->name('superadmin.update_course');
+    Route::delete('/courses/{id}', [SuperAdminController::class, 'delete_course'])->name('superadmin.delete_course');
+
+    // Subject
+    Route::get('/subjects/{id}', [SuperAdminController::class, 'get_subjects'])->name('superadmin.get_subjects');
+    Route::post('/subjects', [SuperAdminController::class, 'save_subject'])->name('superadmin.save_subject');
+    Route::get('/subject/{id}', [SuperAdminController::class, 'get_subject'])->name('superadmin.get_subject');
+    Route::post('/subject/{id}/edit', [SuperAdminController::class, 'update_subject'])->name('superadmin.update_subject');
+    Route::delete('/subject/{id}', [SuperAdminController::class, 'delete_subject'])->name('superadmin.delete_subject');
+    
+    
 });

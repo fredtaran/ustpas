@@ -29,7 +29,7 @@ class AuthenticationController extends Controller
 
             // Check user role and redirect to the appropriate page
             if(Auth::user()->role == 0) {
-
+                return redirect()->intended('/superadmin');
             } else if(Auth::user()->role == 1) {
                 return redirect()->intended('/admission');
             } else if(Auth::user()->role == 2) {
