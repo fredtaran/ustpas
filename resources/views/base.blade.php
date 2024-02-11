@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', 'USTP | AS')</title>
+        <title>@yield('title', 'USTP')</title>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -58,7 +58,7 @@
                 <!-- Brand Logo -->
                 <a href="index3.html" class="brand-link">
                     <img src="{{ asset('img/ustp-logo.png') }}" alt="USTP Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                    <span class="brand-text font-weight-light">USTP | AS</span>
+                    <span class="brand-text font-weight-light">USTP</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -96,7 +96,7 @@
                             <li class="nav-item">
                                 <a href="{{ route('superadmin.courses_view') }}" class="nav-link">
                                     <i class="nav-icon fas fa-list"></i>
-                                    Courses
+                                    Programs
                                 </a>
                             </li>
                             @endif

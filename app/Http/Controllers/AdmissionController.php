@@ -74,7 +74,7 @@ class AdmissionController extends Controller
         if($student->delete()) {
             return response()->json(['message' => "Record has been deleted successfully"], 200);
         } else {
-            return response()->json(['message' => "An errro has been encountered."], 500);
+            return response()->json(['message' => "An error has been encountered."], 500);
         }
     }
 
@@ -193,7 +193,7 @@ class AdmissionController extends Controller
         $tor_raw = null; // Set variable for the output and return
         $escapedCmd = escapeshellcmd($command); // Escape command
         exec($escapedCmd, $tor_raw); // Execute command
-
+        
         // Process the raw TOR data
         $course_subjects = Subject::where('course_id', $student->course_id)->get();
         $tor_raw_collection = collect($tor_raw); // Convert array to collection
@@ -300,7 +300,7 @@ class AdmissionController extends Controller
 
     // Get all subject for credit
     public function get_subject_for_credit($student_id) {
-        $subjects_for_credit = SubjectForCredit::with('subject')->get();
+        $subjects_for_credit = SubjectForCredit::with('subject')->where('student_id', $student_id)->get();
 
         return response()->json([
             'data' => $subjects_for_credit

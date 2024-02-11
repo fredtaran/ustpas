@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\Course;
 use App\Models\User;
@@ -25,6 +26,70 @@ class SuperAdminController extends Controller
         ]);
     }
 
+    // Get single user
+    public function get_user($user_id) {
+        $user = User::findOrFail($user_id);
+
+        return response()->json([
+            'user' => $user
+        ]);
+    }
+
+    // Edit user
+    public function edit_user(Request $request, $user_id) {
+        // Validate data
+        $data = $request->validate([
+            'edit_first_name'    =>  'required',
+            'edit_middle_name'   =>  '',
+            'edit_last_name'     =>  'required',
+            'edit_suffix'        =>  '',
+            'edit_email'         =>  'required|unique:users,email,'.$user_id,
+            'edit_username'      =>  'required',
+            'edit_role'          =>  'required',
+        ]);
+
+        $user = User::findOrFail($user_id);
+
+        $user->first_name = $data['edit_first_name'];
+        $user->middle_name = $data['edit_middle_name'];
+        $user->last_name = $data['edit_last_name'];
+        $user->suffix = $data['edit_suffix'];
+        $user->email = $data['edit_email'];
+        $user->username = $data['edit_username'];
+        $user->role = $data['edit_role'];
+
+        if($user->save()) {
+            return response()->json([
+                'message' => 'Successfully updated.'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Something went wrong.'
+            ], 500);
+        }
+    }
+
+    // Add user
+    public function add_user(Request $request) {
+        // Validate inputs
+        $data = $request->validate([
+            'first_name'    =>  'required',
+            'middle_name'   =>  '',
+            'last_name'     =>  'required',
+            'suffix'        =>  '',
+            'email'         =>  'required|unique:users,email',
+            'username'      =>  'required',
+            'password'      =>  'required',
+            'role'          =>  'required',
+        ]);
+
+        if(User::create($data)) {
+            return response()->json([
+                'message' => 'Successfully added.'
+            ], 200);
+        }
+    }
+
     // Delete User
     public function delete_user($user_id) {
         $user = User::findOrFail($user_id);
@@ -37,7 +102,7 @@ class SuperAdminController extends Controller
 
     // Add Courses view - return view
     public function courses(Request $request) {
-        $chairpersons = User::where('role', 1)->get(); // For new courses modal select option
+        $chairpersons = User::where('role', 2)->get(); // For new courses modal select option
 
         return view('superadmin/courses')->with(['chairpersons' => $chairpersons]);
     }

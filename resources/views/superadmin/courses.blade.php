@@ -27,8 +27,8 @@
         <table class="table table-bordered table-hover text-center" id="tbl_courses">
             <thead>
                 <tr>
-                    <th>Course Code</th>
-                    <th>Description</th>
+                    <th>Program Code</th>
+                    <th>Program Title</th>
                     <th>Chairperson</th>
                     <th>Action</th>
                 </tr>
@@ -50,17 +50,17 @@
                         <div class="modal-body">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="course_name">Course Name</label>
+                                    <label for="course_name">Program Title</label>
                                     <input type="text" name="course_name" class="form-control" id="course_name">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="course_code">Course Code</label>
+                                    <label for="course_code">Program Code</label>
                                     <input type="text" name="course_code" class="form-control" id="course_code" placeholder="e.g BSIT">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="chairperson">Course Chairperson</label>
+                                    <label for="chairperson">Program Chairperson</label>
                                     <select name="chairperson" id="chairperson" class="form-control">
                                         <option value="">--- Please select the course chairperson ---</option>
                                         @foreach ($chairpersons as $chairperson)
@@ -88,7 +88,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Edit course</h4>
+                        <h4 class="modal-title">Edit Program</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -98,17 +98,17 @@
                         <div class="modal-body">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="edit_course_name">Course Name</label>
+                                    <label for="edit_course_name">Program Title</label>
                                     <input type="text" name="edit_course_name" class="form-control" id="edit_course_name">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="edit_course_code">Course Code</label>
+                                    <label for="edit_course_code">Program Code</label>
                                     <input type="text" name="edit_course_code" class="form-control" id="edit_course_code">
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="edit_chairperson">Course Chairperson</label>
+                                    <label for="edit_chairperson">Program Chairperson Chairperson</label>
                                     <select name="edit_chairperson" id="edit_chairperson" class="form-control">
                                         <option value="">--- Please select the course chairperson ---</option>
                                         @foreach ($chairpersons as $chairperson)

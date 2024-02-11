@@ -64,6 +64,9 @@ Route::middleware(['auth', 'checkRoles:0'])->prefix('superadmin')->group(functio
 
     // Users
     Route::get('/get_users', [SuperAdminController::class, 'get_users'])->name('superadmin.get_users');
+    Route::post('/add_user', [SuperAdminController::class, 'add_user'])->name('superadmin.add_user');
+    Route::get('/user/{user_id}', [SuperAdminController::class, 'get_user'])->name('superadmin.get_user');
+    Route::post('/user/{user_id}/edit', [SuperAdminController::class, 'edit_user'])->name('superadmin.edit_user');
     Route::delete('/user/{user_id}', [SuperAdminController::class, 'delete_user'])->name('superadmin.delete_user');
 
     // Course
@@ -81,6 +84,4 @@ Route::middleware(['auth', 'checkRoles:0'])->prefix('superadmin')->group(functio
     Route::get('/subject/{id}', [SuperAdminController::class, 'get_subject'])->name('superadmin.get_subject');
     Route::post('/subject/{id}/edit', [SuperAdminController::class, 'update_subject'])->name('superadmin.update_subject');
     Route::delete('/subject/{id}', [SuperAdminController::class, 'delete_subject'])->name('superadmin.delete_subject');
-    
-    
 });
