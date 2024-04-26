@@ -21,14 +21,11 @@ class ChairpersonController extends Controller
 
     // Get all the students subjected for accreditation
     public function get_students() {
-        $students = DB::table('students')
-                        ->join('courses', 'students.course_id', '=', 'courses.id')
-                        ->join('subject_for_credits', 'students.id', '=', 'subject_for_credits.student_id')
-                        ->join('users', 'courses.chairperson_id', '=', 'users.id')
-                        ->select('students.*', 'users.id AS chair', 'courses.course_name')
-                        ->groupBy('students.id', 'students.student_id', 'students.first_name', 'students.middle_name', 'students.last_name', 'students.suffix', 'students.email', 'students.contact_number', 'students.course_id', 'students.year_level', 'students.created_at', 'students.updated_at', 'users.id', 'courses.course_name')
-                        ->where('users.id', auth()->user()->id)
-                        ->get();
+        $students = Student::whereHas('credited_subject', function($query) {
+                                $query->whereHas('subject', function($x) {
+                                    $x->where('chairperson_id', auth()->user()->id);
+                                })->where('status', 1);
+                            })->with('course')->get();
 
         return response()->json([
             'data'  =>  $students
@@ -46,7 +43,12 @@ class ChairpersonController extends Controller
 
     // Get subjects for accredited
     public function get_subjects_for_accreditation($student_id) {
-        $subjects = SubjectForCredit::with('subject')->where('student_id', $student_id)->where('status', 1)->get();
+        $subjects = SubjectForCredit::with('subject')
+                                    ->whereHas('subject', function($query) {
+                                        $query->where('chairperson_id', auth()->user()->id);
+                                    })
+                                    ->where('student_id', $student_id)
+                                    ->where('status', 1)->get();
 
         return response()->json([
             'data' => $subjects

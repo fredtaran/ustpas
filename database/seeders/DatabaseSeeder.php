@@ -15,14 +15,14 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         $data = [
-            // [
-            //     'first_name' => 'April Rose',
-            //     'last_name' => 'Legaspi',
-            //     'email' => 'ftaran100411@gmail.com',
-            //     'username' => 'aprilrose.legaspi',
-            //     'role' => 2,
-            //     'password' => bcrypt('@dmin123'),
-            // ],
+            [
+                'first_name' => 'Fred',
+                'last_name' => 'Taran',
+                'email' => 'ftaran100411@gmail.com',
+                'username' => 'fred.taran',
+                'role' => 2,
+                'password' => bcrypt('@dmin123'),
+            ],
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
@@ -38,8 +38,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CourseSeeder::class,
             SubjectSeeder::class,
-            // StudentSeeder::class,
-            // TorSeeder::class
+            StudentSeeder::class,
+            TorSeeder::class
         ]);
     }
 }

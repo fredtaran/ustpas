@@ -64,7 +64,7 @@
                                     <select name="chairperson" id="chairperson" class="form-control">
                                         <option value="">--- Please select the course chairperson ---</option>
                                         @foreach ($chairpersons as $chairperson)
-                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix") }}</option>
+                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
                                         @endforeach
                                     </select>
                                 </div>

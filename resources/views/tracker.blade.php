@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>@yield('title', 'USTP | AS')</title>
+        <title>@yield('title', 'USTP')</title>
 
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -34,7 +34,7 @@
                         <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
                         <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code" value="4803442855">
+                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                             </div>

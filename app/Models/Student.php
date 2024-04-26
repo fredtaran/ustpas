@@ -24,4 +24,8 @@ class Student extends Model
     public function course() {
         return $this->hasMany(Course::class, 'id', 'course_id');
     }
+
+    public function credited_subject() {
+        return $this->hasMany(SubjectForCredit::class, 'student_id', 'id');
+    }
 }

@@ -67,7 +67,13 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="hidden" value="{{ $course[0]->id }}" name="course_id" readonly>
+                                    <label for="chairperson">Program/Area Chairperson</label>
+                                    <select name="chairperson" id="chairperson" class="form-control">
+                                        <option value="">--- Please select the subject Program/Area Chairperson ---</option>
+                                        @foreach ($chairpersons as $chairperson)
+                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                         </div>
 
@@ -111,6 +117,16 @@
                                 <div class="form-group">
                                     <label for="edit_unit">Unit</label>
                                     <input type="number" min=0 step=1 name="edit_unit" class="form-control" id="edit_unit">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="chairperson">Program/Area Chairperson</label>
+                                    <select name="edit_chairperson" id="edit_chairperson" class="form-control">
+                                        <option value="">--- Please select the subject Program/Area Chairperson ---</option>
+                                        @foreach ($chairpersons as $chairperson)
+                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -215,6 +231,9 @@ $(function() {
                 $('#edit_subject_code').val(response.subject.subject_code);
                 $('#edit_description').val(response.subject.subject_description);
                 $('#edit_unit').val(response.subject.unit);
+                if(response.subject.chairperson_id){
+                    $('#edit_chairperson option[value="' + response.subject.chairperson_id + '"]').prop('selected', true);
+                }
             },
             error: function(xhr, response, error) {
                 console.log(error);
@@ -244,6 +263,10 @@ $(function() {
             unit: {
                 required: true,
                 number: true,
+            },
+
+            chairperson: {
+                required: true
             }
         },
 
@@ -259,6 +282,10 @@ $(function() {
             unit: {
                 required: "Please select the subject unit(s).",
                 number: "Please input a valid numeric value."
+            },
+
+            chairperson: {
+                required: "Please select the Program/Area Chairperson for this subject.",
             }
         },
 
@@ -292,7 +319,11 @@ $(function() {
             edit_unit: {
                 required: true,
                 number: true,
-            }
+            },
+
+            edit_chairperson: {
+                required: true
+            },
         },
 
         messages: {
@@ -307,6 +338,10 @@ $(function() {
             edit_unit: {
                 required: "Please select the subject unit(s).",
                 number: "Please input a valid numeric value."
+            },
+
+            edit_chairperson: {
+                required: "Please select the Program/Area Chairperson for this subject.",
             }
         },
 

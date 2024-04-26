@@ -137,8 +137,12 @@ class SuperAdminController extends Controller
     // Subject page - return view
     public function course_detail($id) {
         $course = Course::where('id', $id)->get();
+        $chairpersons = User::where('role', 2)->get();
 
-        return view('superadmin.course_detail')->with(['course' => $course]);
+        return view('superadmin.course_detail')->with([
+            'course' => $course,
+            'chairpersons' => $chairpersons
+        ]);
     }
 
     // Retrieve data for edit - return json
@@ -223,7 +227,8 @@ class SuperAdminController extends Controller
             'edit_subject_code' => ['required'],
             'edit_description' => ['required'],
             'edit_unit' => ['numeric'],
-            'course_id' => ['required']
+            'course_id' => ['required'],
+            'edit_chairperson' => ['required']
         ]);
 
         // Find the existing record - return view
@@ -233,6 +238,7 @@ class SuperAdminController extends Controller
         $subject->subject_code = $subject_data['edit_subject_code'];
         $subject->subject_description = $subject_data['edit_description'];
         $subject->unit = $subject_data['edit_unit'];
+        $subject->chairperson_id = $subject_data['edit_chairperson'];
         $subject->save();
 
         // Refresh page

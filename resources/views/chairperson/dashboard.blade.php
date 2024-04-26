@@ -52,7 +52,12 @@
                         return data.first_name + " " + (data.middle_name == null ? "" : data.middle_name[0] + ".") + " " + data.last_name + " " + (data.suffix == null ? "" : data.suffix)
                     }
                 },
-                { data: 'course_name' },
+                { 
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return data.course[0].course_name
+                    }
+                },
                 { data: 'year_level' }
             ],
             responsive: true, 
