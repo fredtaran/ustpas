@@ -31,58 +31,84 @@
             </div>
         @endif
 
-        <div class="col-md-6 offset-md-3 p-2 rounded" style="background-color: #dee2e6;">
+        <div class="col-md-12 p-2 rounded" style="background-color: #dee2e6;">
             <form action="{{ route('admission.save_student_changes', $student->id) }}" method="POST" id="add_student_form">
                 @csrf
 
-                <div class="form-group">
-                    <label for="student_id">Student ID</label>
-                    <input type="text" name="student_id" id="student_id" class="form-control" value="{{ $student->student_id }}">
-                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="student_id">Student ID</label>
+                            <input type="text" name="student_id" id="student_id" class="form-control" value="{{ $student->student_id }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="first_name">Firstname</label>
-                    <input type="text" name="first_name" id="first_name" class="form-control" value="{{ $student->first_name }}">
-                </div>
+                        <div class="form-group">
+                            <label for="first_name">Firstname</label>
+                            <input type="text" name="first_name" id="first_name" class="form-control" value="{{ $student->first_name }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="middle_name">Middlename</label>
-                    <input type="text" name="middle_name" id="middle_name" class="form-control" value="{{ $student->middle_name }}">
-                </div>
+                        <div class="form-group">
+                            <label for="middle_name">Middlename</label>
+                            <input type="text" name="middle_name" id="middle_name" class="form-control" value="{{ $student->middle_name }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="last_name">Lastname</label>
-                    <input type="text" name="last_name" id="last_name" class="form-control" value="{{ $student->last_name }}">
-                </div>
+                        <div class="form-group">
+                            <label for="last_name">Lastname</label>
+                            <input type="text" name="last_name" id="last_name" class="form-control" value="{{ $student->last_name }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="suffix">Suffix</label>
-                    <input type="text" name="suffix" id="suffix" class="form-control" value="{{ $student->suffix }}">
-                </div>
+                        <div class="form-group">
+                            <label for="suffix">Suffix</label>
+                            <input type="text" name="suffix" id="suffix" class="form-control" value="{{ $student->suffix }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{ $student->email }}">
-                </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" value="{{ $student->email }}">
+                        </div>
 
-                <div class="form-group">
-                    <label for="contact_number">Contact Number</label>
-                    <input type="text" name="contact_number" id="contact_number" class="form-control" placeholder="e.g 09123456789" value="{{ $student->contact_number }}">
-                </div>
+                        <div class="form-group">
+                            <label for="contact_number">Contact Number</label>
+                            <input type="text" name="contact_number" id="contact_number" class="form-control" placeholder="e.g 09123456789" value="{{ $student->contact_number }}">
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label for="course_id">Course</label>
-                    <select name="course_id" id="course_id" class="form-control">
-                        <option value="">--- Please select course ---</option>
-                        @foreach ($courses as $course)
-                        <option value="{{ $course->id }}" @if($student->course_id == $course->id){{ "selected" }}@endif>{{ $course->course_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="course_id">Course</label>
+                            <select name="course_id" id="course_id" class="form-control">
+                                <option value="">--- Please select course ---</option>
+                                @foreach ($courses as $course)
+                                <option value="{{ $course->id }}" @if($student->course_id == $course->id){{ "selected" }}@endif>{{ $course->course_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                <div class="form-group">
-                    <label for="year_level">Year Level</label>
-                    <input type="number" min=0 max=5 step=1 name="year_level" id="year_level" class="form-control" value="{{ $student->year_level }}">
+                        <div class="form-group">
+                            <label for="year_level">Year Level</label>
+                            <input type="number" min=0 max=5 step=1 name="year_level" id="year_level" class="form-control" value="{{ $student->year_level }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="major">Major (if any)</label>
+                            <input type="text" class="form-control" id="major" name="major" value="{{ $student->major }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="last_school">Name of School Last Attended</label>
+                            <input type="text" class="form-control" id="last_school" name="last_school" value="{{ $student->last_school }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="previous_course">Previous Course</label>
+                            <input type="text" class="form-control" id="previous_course" name="previous_course" value="{{ $student->previous_course }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="period_of_attendance">Period of Attendance</label>
+                            <input type="text" class="form-control" id="period_of_attendance" name="period_of_attendance" value="{{ $student->period_of_attendance }}">
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Save changes</button>
@@ -138,6 +164,18 @@
                 year_level: {
                     required: true,
                     digits: true, 
+                },
+
+                last_school: {
+                    required: true
+                },
+
+                previous_course: {
+                    required: true
+                },
+
+                period_of_attendance: {
+                    required: true
                 }
             },
 
@@ -173,6 +211,18 @@
                 year_level: {
                     required: "This field is required.",
                     digits: "Only numbers are allowed.",
+                },
+
+                last_school: {
+                    required: "This field is required."
+                },
+
+                previous_course: {
+                    required: "This field is required."
+                },
+
+                period_of_attendance: {
+                    required: "This field is required."
                 }
             },
 

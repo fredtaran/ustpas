@@ -29,15 +29,22 @@ class TrackerController extends Controller
 
     public function generate_pdf($tracking_code) {
         $code = Code::where('code', $tracking_code)->first();
-        $creditedSubjects = SubjectForCredit::with('subject.course.chairperson')->where('code_id', $code->id)->get();
-        $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
+        $creditedSubjects = SubjectForCredit::with('subject.course.chairperson')
+                                            ->where('code_id', $code->id)
+                                            ->get();
 
-        $data = [
-            'student' => $student,
-            'creditedSubjects' => $creditedSubjects,
-        ];
+        return response()->json([
+            'cs' => $creditedSubjects
+        ]);
 
-        $pdf = Pdf::loadView('pdf.pdf_template', $data);
-        return $pdf->stream('sample.pdf');
+        // $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
+
+        // $data = [
+        //     'student' => $student,
+        //     'creditedSubjects' => $creditedSubjects,
+        // ];
+
+        // $pdf = Pdf::loadView('pdf.pdf_template', $data);
+        // return $pdf->stream('sample.pdf');
     }
 }

@@ -61,6 +61,10 @@ class AdmissionController extends Controller
             'contact_number' => 'required|unique:students,contact_number',
             'course_id' => 'required|exists:courses,id',
             'year_level' => 'required',
+            'major' => '',
+            'last_school' => 'required',
+            'previous_course' => 'required',
+            'period_of_attendance' => 'required'
         ]);
 
         if(Student::create($data)) {
@@ -102,6 +106,10 @@ class AdmissionController extends Controller
             'contact_number' => 'required',
             'course_id' => 'required|exists:courses,id',
             'year_level' => 'required',
+            'major' => '',
+            'last_school' => 'required',
+            'previous_course' => 'required',
+            'period_of_attendance' => 'required'
         ]);
 
         $student = Student::findOrFail($id);
@@ -115,6 +123,10 @@ class AdmissionController extends Controller
         $student->contact_number = $data['contact_number'];
         $student->course_id = $data['course_id'];
         $student->year_level = $data['year_level'];
+        $student->major = $data['major'];
+        $student->last_school = $data['last_school'];
+        $student->previous_course = $data['previous_course'];
+        $student->period_of_attendance = $data['period_of_attendance'];
         $student->save();
 
         return redirect()->route('admission.students_view');

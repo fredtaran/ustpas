@@ -112,16 +112,16 @@
 
                 <tr>
                     <td style="text-align: left; padding-right: 10px; width: 50%">Course & Year: <span style="text-decoration: underline;">{{ $student->course[0]->course_code }} - {{ $student->year_level }}</span></td>
-                    <td style="text-align: left; width: 50%">Major (if any): ______________________________</td>
+                    <td style="text-align: left; width: 50%">Major (if any): <span style="text-decoration: underline;">{{ $student->major }}</span></td>
                 </tr>
 
                 <tr>
-                    <td colspan="2" style="text-align: left;">Name of School last attended: ______________________________________________________________</td>
+                    <td colspan="2" style="text-align: left;">Name of School last attended: <span style="text-decoration: underline;">{{ $student->last_school }}</span></td>
                 </tr>
 
                 <tr>
-                    <td style="text-align: left; padding-right: 10px; width: 50%">Previous Course: ____________________________</td>
-                    <td style="text-align: left; width: 50%">Period of Attendance: ________________________</td>
+                    <td style="text-align: left; padding-right: 10px; width: 80%">Previous Course: <span style="text-decoration: underline;">{{ $student->previous_course }}</span></td>
+                    <td style="text-align: left; width: 50%">Period of Attendance: <span style="text-decoration: underline;">{{ $student->period_of_attendance }}</span></td>
                 </tr>
             </tbody>
         </table>
@@ -164,7 +164,7 @@
                 </tr>
                 @endforeach
 
-                @for ($i = 1; $i <= 10 - $creditedSubjects->count(); $i++)
+                @for ($i = 1; $i <= 9 - $creditedSubjects->count(); $i++)
                 <tr>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>

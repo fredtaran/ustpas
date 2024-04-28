@@ -18,7 +18,11 @@ class Student extends Model
         'email',
         'contact_number',
         'course_id',
-        'year_level'
+        'year_level',
+        'major',
+        'last_school',
+        'previous_course',
+        'period_of_attendance'
     ];
 
     public function course() {
