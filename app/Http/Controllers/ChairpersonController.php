@@ -43,12 +43,17 @@ class ChairpersonController extends Controller
 
     // Get subjects for accredited
     public function get_subjects_for_accreditation($student_id) {
+        // $subjects = SubjectForCredit::with('subject')
+        //                             ->whereHas('subject', function($query) {
+        //                                 $query->where('chairperson_id', auth()->user()->id);
+        //                             })
+        //                             ->where('student_id', $student_id)
+        //                             ->where('status', 1)->get();
+
         $subjects = SubjectForCredit::with('subject')
-                                    ->whereHas('subject', function($query) {
-                                        $query->where('chairperson_id', auth()->user()->id);
-                                    })
+                                    ->with('subject.chairperson')
                                     ->where('student_id', $student_id)
-                                    ->where('status', 1)->get();
+                                    ->get();
 
         return response()->json([
             'data' => $subjects

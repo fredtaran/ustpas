@@ -43,7 +43,9 @@
 
                     <div class="card" id="student_data" style="display: none;">
                         <div class="card-body">
-                            <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2"><i class="fa fa-print"></i> Print</a>
+                            <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
+                                <i class="fa fa-print"></i> Print
+                            </a>
 
                             <table class="table table-bordered text-center" id="student_data_tbl">
                                 <thead>
@@ -101,6 +103,7 @@
 
                                 $('#student_data').css('display', 'block');
                                 for(var i = 0; i <= response.data.length - 1; i++) {
+
                                     html += 
                                         `<tr>
                                             <td>${ response.data[i].subject_code_to_be_credited }</td>
@@ -109,6 +112,10 @@
                                             <td>${ response.data[i].subject.subject_code } - ${ response.data[i].subject.subject_description }</td>`;
 
                                     if(response.data[i].status == 1) {
+                                        
+                                        // Disable print button
+                                        $('#printBtn').addClass("disabled");
+
                                         html +=
                                         `
                                             <td><span class="badge badge-secondary">Pending</span></td>

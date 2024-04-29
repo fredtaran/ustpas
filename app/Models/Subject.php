@@ -13,7 +13,8 @@ class Subject extends Model
         'subject_code',
         'subject_description',
         'unit',
-        'course_id'
+        'course_id',
+        'chairperson_id'
     ];
 
     public function course() {
@@ -22,5 +23,9 @@ class Subject extends Model
 
     public function subjectForCredit() {
         return $this->hasMany(SubjectForCredit::class, 'subject_id', 'id');
+    }
+
+    public function chairperson() {
+        return $this->hasMany(User::class, 'id', 'chairperson_id');
     }
 }

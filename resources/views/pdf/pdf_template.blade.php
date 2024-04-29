@@ -156,11 +156,10 @@
                     <td>Denied</td>
                     @endif
                     
-                    @foreach ($subject->subject->course as $course)
-                        @foreach ($course->chairperson as $chairperson)
-                        <td>{{ $chairperson->last_name }}, {{ $chairperson->first_name }}</td>                            
-                        @endforeach
+                    @foreach ($subject->subject->chairperson as $chairperson)
+                        <td>{{ "{$chairperson->last_name}, {$chairperson->first_name} {$chairperson->suffix}" }} {{ substr($chairperson->middle_name, 0, 1) }}</td>
                     @endforeach
+
                 </tr>
                 @endforeach
 

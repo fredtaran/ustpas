@@ -59,7 +59,21 @@
                 { 
                     data: null,
                     render: function(data, type, row, meta) {
-                        return `<button class="btn btn-sm btn-primary approve"><i class="fa fa-check"></i></button> <button class="btn btn-sm btn-danger denied"><i class="fa fa-times"></i></button>`
+                        if(data.subject.chairperson_id == {{ auth()->user()-> id}}) {
+                            return `<button class="btn btn-sm btn-primary approve">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger denied">
+                                        <i class="fa fa-times"></i>
+                                    </button>`
+                        } else {
+                            return `<button class="btn btn-sm btn-primary approve" disabled>
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger denied" disabled>
+                                        <i class="fa fa-times"></i>
+                                    </button>`
+                        }
                     }
                 }
             ],
@@ -79,6 +93,7 @@
                 },
                 success: function(response) {
                     tableForAccre.ajax.reload();
+                    window.location.href = window.location.origin
                 },
                 error: function(xhr, errorStatus, error) {
                     console.log(error)
