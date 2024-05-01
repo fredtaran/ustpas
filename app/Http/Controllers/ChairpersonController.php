@@ -43,13 +43,6 @@ class ChairpersonController extends Controller
 
     // Get subjects for accredited
     public function get_subjects_for_accreditation($student_id) {
-        // $subjects = SubjectForCredit::with('subject')
-        //                             ->whereHas('subject', function($query) {
-        //                                 $query->where('chairperson_id', auth()->user()->id);
-        //                             })
-        //                             ->where('student_id', $student_id)
-        //                             ->where('status', 1)->get();
-
         $subjects = SubjectForCredit::with('subject')
                                     ->with('subject.chairperson')
                                     ->where('student_id', $student_id)
@@ -75,5 +68,42 @@ class ChairpersonController extends Controller
         return response()->json([
             'message' => "Updated successfully"
         ]);
+    }
+
+    // Upload e-sig
+    public function upload_esig($user_id) {
+        $user = User::findOrFail($user_id);
+
+        return view('chairperson.upload_esig')->with([
+            'user' => $user
+        ]);
+    }
+
+    // Save e-sig
+    public function save_upload_esig(Request $request, $user_id) {
+        // Validate
+        $messages = [
+            'e_signature.required' => 'Please select a file.',
+            'e_signature.mimes' => 'Only JGP, JPEG, PNG files are allowed.',
+            'e_signature.max' => 'The file size may not exceed 2048 kilobytes.',
+        ];
+    
+
+        $uploadedFile = $request->validate([
+            'e_signature' => 'required|mimes:jpg,png,jpeg|max:2048'
+        ], $messages);
+
+
+        $file = $request->file('e_signature');
+        $filename = uniqid() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs('public', $filename);
+
+        // Save to database
+        $user = User::findOrFail($user_id);
+        $user->esignature = $filename;
+        $user->save();
+
+        return back()->with('success','You have successfully upload file.')
+                    ->with('e_signature', $fileName);
     }
 }

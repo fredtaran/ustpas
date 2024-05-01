@@ -92,6 +92,15 @@
                                 @endif
                             </li>
 
+                            @if (Auth::user()->role == 2)
+                            <li class="nav-item">
+                                <a href="{{ route('chairperson.upload_esig', Auth::user()->id) }}" class="nav-link">
+                                    <i class="nav-icon fas fa-upload"></i>
+                                    Upload e-signature
+                                </a>
+                            </li>
+                            @endif
+
                             @if (Auth::user()->role == 0)
                             <li class="nav-item">
                                 <a href="{{ route('superadmin.courses_view') }}" class="nav-link">

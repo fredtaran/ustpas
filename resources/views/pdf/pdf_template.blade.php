@@ -157,7 +157,10 @@
                     @endif
                     
                     @foreach ($subject->subject->chairperson as $chairperson)
-                        <td>{{ "{$chairperson->last_name}, {$chairperson->first_name} {$chairperson->suffix}" }} {{ substr($chairperson->middle_name, 0, 1) }}</td>
+                        <td>
+                            <!-- <img src="{{ url('storage') }}/{{$chairperson->esignature}}" alt="e-sig" style="width: 100px; height: auto;"> -->
+                            {{ "{$chairperson->last_name}, {$chairperson->first_name} {$chairperson->suffix}" }} {{ substr($chairperson->middle_name, 0, 1) }}
+                        </td>
                     @endforeach
 
                 </tr>

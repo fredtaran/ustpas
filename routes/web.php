@@ -56,6 +56,8 @@ Route::middleware(['auth', 'checkRoles:2'])->prefix('chairperson')->group(functi
     Route::get('/student/{student_id}', [ChairpersonController::class, 'get_student'])->name('chairperson.get_student');
     Route::get('/student/{student_id}/subjects', [ChairpersonController::class, 'get_subjects_for_accreditation'])->name('chairperson.get_subjects_for_accreditation');
     Route::put('/accredit/{accreditation_id}/{status}', [ChairpersonController::class, 'update_status'])->name('chairperson.update_status');
+    Route::get('/upload_esig/{user_id}', [ChairpersonController::class, 'upload_esig'])->name('chairperson.upload_esig');
+    Route::post('/upload_esig/{user_id}', [ChairpersonController::class, 'save_upload_esig'])->name('chairperson.save_upload_esig');
 });
 
 // Superadmin
