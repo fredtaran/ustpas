@@ -159,6 +159,7 @@
                     @foreach ($subject->subject->chairperson as $chairperson)
                         <td>
                             <!-- <img src="{{ url('storage') }}/{{$chairperson->esignature}}" alt="e-sig" style="width: 100px; height: auto;"> -->
+                            <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/663234c214643_front.jpg'))); ?>" width="50px"><br/>
                             {{ "{$chairperson->last_name}, {$chairperson->first_name} {$chairperson->suffix}" }} {{ substr($chairperson->middle_name, 0, 1) }}
                         </td>
                     @endforeach

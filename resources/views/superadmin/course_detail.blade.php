@@ -5,14 +5,14 @@
 @section('map_site')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1 class="m-0">{{ $course[0]->course_name }}</h1>
+        <h1 class="m-0">{{ $course->course_name }}</h1>
     </div><!-- /.col -->
 
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('admission.dashboard') }}">Home</a></li>
             <li class="breadcrumb-item">Courses</li>
-            <li class="breadcrumb-item active">{{ $course[0]->course_code }}</li>
+            <li class="breadcrumb-item active">{{ $course->course_code }}</li>
         </ol>
     </div><!-- /.col -->
 </div><!-- /.row -->
@@ -75,6 +75,8 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <input type="hidden" name="course_id" value="{{ $course->id }}">
                         </div>
 
                         <div class="modal-footer justify-content-between">
@@ -130,7 +132,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="hidden" value="{{ $course[0]->id }}" name="course_id" readonly>
+                                    <input type="hidden" value="{{ $course->id }}" name="course_id" readonly>
                                 </div>
                         </div>
 
@@ -154,7 +156,7 @@
 $(function() {
     // Initialize datatable
     const subjectTable = $("#tbl_subjects").DataTable({
-        ajax: "{{ url('/superadmin/subjects') }}/" + {{ $course[0]->id }},
+        ajax: "{{ url('/superadmin/subjects') }}/" + {{ $course->id }},
         columns: [
             { 
                 data: 'subject_code',

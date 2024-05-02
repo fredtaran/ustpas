@@ -136,7 +136,7 @@ class SuperAdminController extends Controller
 
     // Subject page - return view
     public function course_detail($id) {
-        $course = Course::where('id', $id)->get();
+        $course = Course::where('id', $id)->first();
         $chairpersons = User::where('role', 2)->get();
 
         return view('superadmin.course_detail')->with([
@@ -193,12 +193,15 @@ class SuperAdminController extends Controller
 
     // Save subject - process
     public function save_subject(Request $request) {
+        // dd($request->input());
+
         // Validate inputs
         $subject_data = $request->validate([
             'subject_code' => ['required'],
             'description' => ['required'],
             'unit' => ['numeric'],
-            'course_id' => ['required']
+            'course_id' => ['required'],
+            'chairperson' => ['required'],
         ]);
 
         // Initialize the subject model
@@ -207,6 +210,7 @@ class SuperAdminController extends Controller
         $subject->subject_description = $subject_data['description'];
         $subject->unit = $subject_data['unit'];
         $subject->course_id = $subject_data['course_id'];
+        $subject->chairperson_id = $subject_data['chairperson'];
         $subject->save();
 
         // Refresh page
