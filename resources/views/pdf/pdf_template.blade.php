@@ -158,25 +158,15 @@
                     
                     @foreach ($subject->subject->chairperson as $chairperson)
                         <td>
-                            <!-- <img src="{{ url('storage') }}/{{$chairperson->esignature}}" alt="e-sig" style="width: 100px; height: auto;"> -->
-                            <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/663234c214643_front.jpg'))); ?>" width="50px"><br/>
+                            @if ($subject->status != 1)
+                            <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/' . $chairperson->esignature))); ?>" width="50px"><br/>
+                            @endif
                             {{ "{$chairperson->last_name}, {$chairperson->first_name} {$chairperson->suffix}" }} {{ substr($chairperson->middle_name, 0, 1) }}
                         </td>
                     @endforeach
 
                 </tr>
                 @endforeach
-
-                @for ($i = 1; $i <= 9 - $creditedSubjects->count(); $i++)
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                @endfor
             </tbody>
         </table>
 
@@ -208,7 +198,13 @@
                 </tr>
 
                 <tr>
-                    <td style="width: 50%">___________________________</td>
+                    <td style="width: 50%">
+                    @if ($subject->recom_app)
+                    <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/' . $chairperson->esignature))); ?>" width="80px"><br/>
+                    @endif
+                    <span style="text-decoration: underline; font-weight: bold;">{{ "{$chairperson->last_name}, {$chairperson->first_name}" }} {{ substr($chairperson->middle_name, 0, 1) }} {{ $chairperson->suffix }}</span>
+                    </td>
+                    
                     <td style="width: 50%">___________________________</td>
                 </tr>
 

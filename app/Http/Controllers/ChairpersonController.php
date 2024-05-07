@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Models\Student;
 use App\Models\Course;
@@ -105,5 +106,60 @@ class ChairpersonController extends Controller
 
         return back()->with('success','You have successfully upload file.')
                     ->with('e_signature', $fileName);
+    }
+
+    // Validate student
+    public function validate_student() {
+        return view('chairperson/validate');
+    }
+
+    // Retrieve all the student for recommending approval
+    public function recommend(Request $request) {
+        $course = Course::where('chairperson_id', auth()->user()->id)->first();
+
+        $students = Student::with('credited_subject')
+                            ->where('course_id', $course->id)
+                            ->whereHas('credited_subject', function ($query) {
+                                $query->whereNotNull('id')->where('recom_app', '!=', 1);
+                            })
+                            ->get();
+
+        return response()->json([
+            'data' => $students
+        ]);
+    }
+
+    // PDF View
+    public function generate_pdf($code_id) {
+        $creditedSubjects = SubjectForCredit::with('subject')
+                                            ->with('subject.chairperson')
+                                            ->where('code_id', $code_id)
+                                            ->get();
+                                            
+        $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
+
+        $data = [
+            'student' => $student,
+            'creditedSubjects' => $creditedSubjects,
+        ];
+
+        $pdf = Pdf::loadView('pdf.pdf_template', $data);
+        return $pdf->stream('sample.pdf');
+    }
+
+    // Update the recommending approval
+    public function update_recommend_approval($student_id, $code_id) {
+        $credited_subjects = SubjectForCredit::where('student_id', $student_id)
+                                                ->where('code_id', $code_id)
+                                                ->get();
+
+        foreach($credited_subjects as $subject) {
+            $subject->recom_app = 1;
+            $subject->save();
+        }
+
+        return response()->json([
+            'subjects' => $credited_subjects
+        ]);
     }
 }

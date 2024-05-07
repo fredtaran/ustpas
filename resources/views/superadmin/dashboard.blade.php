@@ -93,6 +93,7 @@
                                     <option value="0">System Administrator</option>
                                     <option value="1">Admission</option>
                                     <option value="2">Chairperson</option>
+                                    <option value="3">Dean</option>
                                 </select>
                             </div>
                     </div>
@@ -161,6 +162,7 @@
                                     <option value="0">System Administrator</option>
                                     <option value="1">Admission</option>
                                     <option value="2">Chairperson</option>
+                                    <option value="3">Dean</option>
                                 </select>
                             </div>
                     </div>
@@ -390,6 +392,8 @@
                             return "Admission"
                         } else if(data.role == 2) {
                             return "Program Chairperson"
+                        } else if(data.role == 3) {
+                            return "Dean"
                         } else if(data.role == 0) {
                             return "Superadmin"
                         }

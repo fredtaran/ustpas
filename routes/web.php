@@ -58,6 +58,10 @@ Route::middleware(['auth', 'checkRoles:2'])->prefix('chairperson')->group(functi
     Route::put('/accredit/{accreditation_id}/{status}', [ChairpersonController::class, 'update_status'])->name('chairperson.update_status');
     Route::get('/upload_esig/{user_id}', [ChairpersonController::class, 'upload_esig'])->name('chairperson.upload_esig');
     Route::post('/upload_esig/{user_id}', [ChairpersonController::class, 'save_upload_esig'])->name('chairperson.save_upload_esig');
+    Route::get('/validate', [ChairpersonController::class, 'validate_student'])->name('chairperson.validate_student');
+    Route::get('/student_for_validation', [ChairpersonController::class, 'recommend'])->name('chairperson.recommend');
+    Route::get('/generate_pdf/{code_id}', [ChairpersonController::class, 'generate_pdf'])->name('chairperson.generate_pdf');
+    Route::post('/update_recommend_approval/{student_id}/{code_id}', [ChairpersonController::class, 'update_recommend_approval'])->name('chairperson.update_recommend_approval');
 });
 
 // Superadmin
@@ -86,4 +90,9 @@ Route::middleware(['auth', 'checkRoles:0'])->prefix('superadmin')->group(functio
     Route::get('/subject/{id}', [SuperAdminController::class, 'get_subject'])->name('superadmin.get_subject');
     Route::post('/subject/{id}/edit', [SuperAdminController::class, 'update_subject'])->name('superadmin.update_subject');
     Route::delete('/subject/{id}', [SuperAdminController::class, 'delete_subject'])->name('superadmin.delete_subject');
+});
+
+// Dean
+Route::middleware(['auth', 'checkRoles:3'])->prefix('dean')->group(function() {
+
 });

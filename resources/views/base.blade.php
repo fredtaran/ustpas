@@ -94,6 +94,15 @@
 
                             @if (Auth::user()->role == 2)
                             <li class="nav-item">
+                                <a href="{{ route('chairperson.validate_student') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-check"></i>
+                                    Validate
+                                </a>
+                            </li>
+                            @endif
+
+                            @if (Auth::user()->role == 2)
+                            <li class="nav-item">
                                 <a href="{{ route('chairperson.upload_esig', Auth::user()->id) }}" class="nav-link">
                                     <i class="nav-icon fas fa-upload"></i>
                                     Upload e-signature

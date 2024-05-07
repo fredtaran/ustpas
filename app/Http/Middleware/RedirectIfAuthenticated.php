@@ -29,6 +29,8 @@ class RedirectIfAuthenticated
                     return redirect()->intended('/admission');
                 } else if(Auth::user()->role == 2) {
                     return redirect()->intended('/chairperson');
+                } else if(Auth::user()->role == 3) {
+                    return redirect()->intended('/dean');
                 } else {
                     return redirect()->intended('/login');
                 }

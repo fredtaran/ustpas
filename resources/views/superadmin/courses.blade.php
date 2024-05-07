@@ -291,7 +291,13 @@
                         courseTable.ajax.reload();
                     },
                     error: function(xhr, response, error) {
-                        console.log(error);
+                        Swal.fire({
+                            title: "Something went wrong",
+                            text: "Please contact your system administrator",
+                            icon: "error"
+                        });
+
+                        courseTable.ajax.reload();
                     }
                 });
             }
