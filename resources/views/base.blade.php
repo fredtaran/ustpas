@@ -84,6 +84,11 @@
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
                                     Dashboard
                                 </a>
+                                @elseif (Auth::user()->role == 3)
+                                <a href="{{ route('dean.dashboard') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                                    Dashboard
+                                </a>
                                 @elseif (Auth::user()->role == 0)
                                 <a href="{{ route('superadmin.dashboard') }}" class="nav-link">
                                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -104,6 +109,15 @@
                             @if (Auth::user()->role == 2)
                             <li class="nav-item">
                                 <a href="{{ route('chairperson.upload_esig', Auth::user()->id) }}" class="nav-link">
+                                    <i class="nav-icon fas fa-upload"></i>
+                                    Upload e-signature
+                                </a>
+                            </li>
+                            @endif
+
+                            @if (Auth::user()->role == 3)
+                            <li class="nav-item">
+                                <a href="{{ route('dean.upload_esig', Auth::user()->id) }}" class="nav-link">
                                     <i class="nav-icon fas fa-upload"></i>
                                     Upload e-signature
                                 </a>

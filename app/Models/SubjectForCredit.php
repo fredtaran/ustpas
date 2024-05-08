@@ -16,7 +16,9 @@ class SubjectForCredit extends Model
         'grade',
         'status',
         'subject_code_to_be_credited',
-        'subject_title_to_be_credited'
+        'subject_title_to_be_credited',
+        'recom_app',
+        'approved'
     ];
 
     public function subject() {

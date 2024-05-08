@@ -200,12 +200,17 @@
                 <tr>
                     <td style="width: 50%">
                     @if ($subject->recom_app)
-                    <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/' . $chairperson->esignature))); ?>" width="80px"><br/>
+                    <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/' . $course->chairperson[0]->esignature))); ?>" width="80px"><br/>
                     @endif
-                    <span style="text-decoration: underline; font-weight: bold;">{{ "{$chairperson->last_name}, {$chairperson->first_name}" }} {{ substr($chairperson->middle_name, 0, 1) }} {{ $chairperson->suffix }}</span>
+                    <span style="text-decoration: underline; font-weight: bold;">{{ "{$course->chairperson[0]->last_name}, {$course->chairperson[0]->first_name}" }} {{ substr($course->chairperson[0]->middle_name, 0, 1) }} {{ $course->chairperson[0]->suffix }}</span>
                     </td>
                     
-                    <td style="width: 50%">___________________________</td>
+                    <td style="width: 50%">
+                    @if ($subject->approved)
+                    <img src="data:image/svg+xml;base64,<?php echo base64_encode(file_get_contents(base_path('public/storage/' . $course->dean[0]->esignature))); ?>" width="80px"><br/>
+                    @endif
+                    <span style="text-decoration: underline; font-weight: bold;">{{ "{$course->dean[0]->last_name}, {$course->dean[0]->first_name}" }} {{ substr($course->dean[0]->middle_name, 0, 1) }} {{ $course->dean[0]->suffix }}</span>
+                    </td>
                 </tr>
 
                 <tr>

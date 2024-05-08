@@ -4,78 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use App\Models\User;
 use App\Models\Student;
 use App\Models\Course;
-use App\Models\User;
-use App\Models\Subject;
 use App\Models\SubjectForCredit;
 
-class ChairpersonController extends Controller
+class DeanController extends Controller
 {
-    // Display chairperson dashboard
-    public function dashboard(Request $request) {
-        return view('chairperson/dashboard');
-    }
-
-    // Get all the students subjected for accreditation
-    public function get_students() {
-        $students = Student::whereHas('credited_subject', function($query) {
-                                $query->whereHas('subject', function($x) {
-                                    $x->where('chairperson_id', auth()->user()->id);
-                                })->where('status', 1);
-                            })->with('course')->get();
-
-        return response()->json([
-            'data'  =>  $students
-        ]);
-    }
-
-    // Individual student for approving of subjects subject for accreditation
-    public function get_student($student_id) {
-        $student = Student::findOrFail($student_id);
-
-        return view('chairperson.student')->with([
-            'student' => $student,
-        ]);
-    }
-
-    // Get subjects for accredited
-    public function get_subjects_for_accreditation($student_id) {
-        $subjects = SubjectForCredit::with('subject')
-                                    ->with('subject.chairperson')
-                                    ->where('student_id', $student_id)
-                                    ->get();
-
-        return response()->json([
-            'data' => $subjects
-        ]);
-    }
-
-    // Update if approve or denied
-    public function update_status($accreditation_id, $status) {
-        $accreditation = SubjectForCredit::findOrFail($accreditation_id);
-
-        if($status == 'approved') {
-            $accreditation->status = 2;
-            $accreditation->save();
-        } else if($status == 'denied') {
-            $accreditation->status = 3;
-            $accreditation->save();
-        }
-
-        return response()->json([
-            'message' => "Updated successfully"
-        ]);
+    //
+    public function dashboard() {
+        return view('dean/students_list');
     }
 
     // Upload e-sig
     public function upload_esig($user_id) {
         $user = User::findOrFail($user_id);
 
-        return view('chairperson.upload_esig')->with([
+        return view('dean.upload_esig')->with([
             'user' => $user
         ]);
     }
@@ -108,24 +55,27 @@ class ChairpersonController extends Controller
                     ->with('e_signature', $filename);
     }
 
-    // Validate student
-    public function validate_student() {
-        return view('chairperson/validate');
-    }
+    // Get all students for approval
+    public function for_approval_list() {
+        $courses = array();
+        $courses_list = Course::where('dean_id', auth()->user()->id)->get();
 
-    // Retrieve all the student for recommending approval
-    public function recommend(Request $request) {
-        $course = Course::where('chairperson_id', auth()->user()->id)->first();
+        foreach($courses_list as $course) {
+            array_push($courses, $course->id);
+        }
 
         $students = Student::with('credited_subject')
-                            ->where('course_id', $course->id)
+                            ->with('course')
+                            ->whereIn('course_id', $courses)
                             ->whereHas('credited_subject', function ($query) {
-                                $query->whereNotNull('id')->where('recom_app', '!=', 1);
+                                $query->whereNotNull('id')
+                                        ->where('recom_app', 1)
+                                        ->where('approved', 0);
                             })
                             ->get();
 
         return response()->json([
-            'data' => $students
+            'data'  => $students
         ]);
     }
 
@@ -135,14 +85,13 @@ class ChairpersonController extends Controller
                                             ->with('subject.chairperson')
                                             ->where('code_id', $code_id)
                                             ->get();
-
+                                            
         $student_course = Student::where('id', $creditedSubjects[0]->student_id)->first();
-
         $course = Course::with('chairperson')
                         ->with('dean')
                         ->where('id', $student_course->course_id)
                         ->first();
-                                            
+
         $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
 
         $data = [
@@ -155,14 +104,14 @@ class ChairpersonController extends Controller
         return $pdf->stream('sample.pdf');
     }
 
-    // Update the recommending approval
-    public function update_recommend_approval($student_id, $code_id) {
+    // Approved
+    public function approved($student_id, $code_id) {
         $credited_subjects = SubjectForCredit::where('student_id', $student_id)
                                                 ->where('code_id', $code_id)
                                                 ->get();
 
         foreach($credited_subjects as $subject) {
-            $subject->recom_app = 1;
+            $subject->approved = 1;
             $subject->save();
         }
 

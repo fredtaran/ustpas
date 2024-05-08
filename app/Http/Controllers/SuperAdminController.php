@@ -102,9 +102,13 @@ class SuperAdminController extends Controller
 
     // Add Courses view - return view
     public function courses(Request $request) {
-        $chairpersons = User::where('role', 2)->get(); // For new courses modal select option
+        $chairpersons   = User::where('role', 2)->get(); // For new courses modal select option
+        $deans          = User::where('role', 3)->get();
 
-        return view('superadmin/courses')->with(['chairpersons' => $chairpersons]);
+        return view('superadmin/courses')->with([
+            'chairpersons'  => $chairpersons,
+            'deans'         => $deans
+        ]);
     }
 
     // Fetch all courses - return json
@@ -118,16 +122,18 @@ class SuperAdminController extends Controller
     public function save_course(Request $request) {
         // Validate inputs
         $course_data = $request->validate([
-            'course_name' => ['required'],
-            'course_code' => ['required'],
-            'chairperson' => ['exists:users,id']
+            'course_name'   => ['required'],
+            'course_code'   => ['required'],
+            'chairperson'   => ['exists:users,id'],
+            'dean'          => ['required']
         ]);
 
         // Save new course to database
         $course = new Course();
-        $course->course_name = $course_data['course_name'];
-        $course->course_code = $course_data['course_code'];
+        $course->course_name    = $course_data['course_name'];
+        $course->course_code    = $course_data['course_code'];
         $course->chairperson_id = $course_data['chairperson'];
+        $course->dean_id        = $course_data['dean'];
         $course->save();
 
         // Refresh page

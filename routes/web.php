@@ -8,6 +8,7 @@ use App\Http\Controllers\AdmissionController;
 use App\Http\Controllers\ChairpersonController;
 use App\Http\Controllers\TrackerController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\DeanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,5 +95,10 @@ Route::middleware(['auth', 'checkRoles:0'])->prefix('superadmin')->group(functio
 
 // Dean
 Route::middleware(['auth', 'checkRoles:3'])->prefix('dean')->group(function() {
-
+    Route::get('/', [DeanController::class, 'dashboard'])->name('dean.dashboard');
+    Route::get('/for_approval_list', [DeanController::class, 'for_approval_list'])->name('dean.for_approval_list');
+    Route::get('/upload_esig/{user_id}', [DeanController::class, 'upload_esig'])->name('dean.upload_esig');
+    Route::post('/upload_esig/{user_id}', [DeanController::class, 'save_upload_esig'])->name('dean.save_upload_esig');
+    Route::get('/generate_pdf/{code_id}', [DeanController::class, 'generate_pdf'])->name('dean.generate_pdf');
+    Route::post('/approved/{student_id}/{code_id}', [DeanController::class, 'approved'])->name('dean.approved');
 });

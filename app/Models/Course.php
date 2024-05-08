@@ -12,11 +12,16 @@ class Course extends Model
     protected $fillable = [
         'course_name',
         'course_code',
-        'chairperson_id'
+        'chairperson_id',
+        'dean_id'
     ];
 
     public function chairperson() {
         return $this->hasMany(User::class, 'id', 'chairperson_id');
+    }
+
+    public function dean() {
+        return $this->hasMany(User::class, 'id', 'dean_id');
     }
 
     public function subject() {

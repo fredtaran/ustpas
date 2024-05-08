@@ -68,6 +68,16 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="dean">College Dean</label>
+                                    <select name="dean" id="dean" class="form-control">
+                                        <option value="">--- Please select the college dean ---</option>
+                                        @foreach ($deans as $dean)
+                                        <option value="{{ $dean->id }}">{{ sprintf("$dean->last_name, $dean->first_name $dean->suffix $dean->middle_name") }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         </div>
 
                         <div class="modal-footer justify-content-between">
@@ -108,11 +118,21 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="edit_chairperson">Program Chairperson Chairperson</label>
+                                    <label for="edit_chairperson">Program Chairperson</label>
                                     <select name="edit_chairperson" id="edit_chairperson" class="form-control">
                                         <option value="">--- Please select the course chairperson ---</option>
                                         @foreach ($chairpersons as $chairperson)
                                         <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix") }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="edit_dean">College Dean</label>
+                                    <select name="edit_dean" id="edit_dean" class="form-control">
+                                        <option value="">--- Please select the college dean ---</option>
+                                        @foreach ($deans as $dean)
+                                        <option value="{{ $dean->id }}">{{ sprintf("$dean->last_name, $dean->first_name $dean->suffix") }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -157,6 +177,10 @@
 
             chairperson: {
                 required: true,
+            },
+
+            dean: {
+                required: true,
             }
         },
 
@@ -170,6 +194,10 @@
             },
 
             chairperson: {
+                required: "Please select the course chairperson",
+            },
+
+            dean: {
                 required: "Please select the course chairperson",
             }
         },
@@ -203,6 +231,10 @@
 
             edit_chairperson: {
                 required: true,
+            },
+            
+            edit_dean: {
+                required: true,
             }
         },
 
@@ -216,6 +248,10 @@
             },
 
             edit_chairperson: {
+                required: "Please select the course chairperson",
+            },
+
+            edit_dean: {
                 required: "Please select the course chairperson",
             }
         },
@@ -314,12 +350,14 @@
             type: "GET",
             dataType: 'json',
             success: function(response) {
+                console.log(response.course.dean_id)
                 // Show modal
                 $('#editCourse_form').attr('action', "{{ url('/superadmin/courses') }}/" + data.id + "/edit");
                 $('#modal-editCourses').modal('show');
                 $('#edit_course_name').val(response.course.course_name);
                 $('#edit_course_code').val(response.course.course_code);
                 $('#edit_chairperson option[value="' + response.course.chairperson_id + '"]').prop('selected', true);
+                $('#edit_dean option[value="' + response.course.dean_id + '"]').prop('selected', true);
             },
             error: function(xhr, response, error) {
                 console.log(error);

@@ -9,6 +9,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Code;
 use App\Models\SubjectForCredit;
 use App\Models\Student;
+use App\Models\Course;
 
 class TrackerController extends Controller
 {
@@ -33,12 +34,20 @@ class TrackerController extends Controller
                                             ->with('subject.chairperson')
                                             ->where('code_id', $code->id)
                                             ->get();
+
+        $student_course = Student::where('id', $creditedSubjects[0]->student_id)->first();
+
+        $course = Course::with('chairperson')
+                        ->with('dean')
+                        ->where('id', $student_course->course_id)
+                        ->first();
                                             
         $student = Student::with('course')->where('id', $creditedSubjects[0]->student_id)->first();
 
         $data = [
-            'student' => $student,
-            'creditedSubjects' => $creditedSubjects,
+            'student'           => $student,
+            'creditedSubjects'  => $creditedSubjects,
+            'course'            => $course
         ];
 
         $pdf = Pdf::loadView('pdf.pdf_template', $data);
