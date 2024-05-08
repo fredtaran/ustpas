@@ -34,7 +34,7 @@
                         <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
                         <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
+                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code" value="2812672721">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                             </div>
@@ -103,6 +103,13 @@
 
                                 $('#student_data').css('display', 'block');
                                 for(var i = 0; i <= response.data.length - 1; i++) {
+                                    if(response.data[i].recom_app == 0) {
+                                        // Disable print button
+                                        $('#printBtn').addClass("disabled");
+                                    }
+                                }
+
+                                for(var i = 0; i <= response.data.length - 1; i++) {
 
                                     html += 
                                         `<tr>
@@ -112,10 +119,6 @@
                                             <td>${ response.data[i].subject.subject_code } - ${ response.data[i].subject.subject_description }</td>`;
 
                                     if(response.data[i].status == 1) {
-                                        
-                                        // Disable print button
-                                        $('#printBtn').addClass("disabled");
-
                                         html +=
                                         `
                                             <td><span class="badge badge-secondary">Pending</span></td>
@@ -135,6 +138,7 @@
                                         `
                                     }
                                 }
+
                                 $('#student_data_tbl tbody').html(html);
 
                                 // Print Button
