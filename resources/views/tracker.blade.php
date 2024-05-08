@@ -34,7 +34,7 @@
                         <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
                         <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code" value="2812672721">
+                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                             </div>
