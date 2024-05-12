@@ -15,18 +15,18 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         $data = [
-            [
-                'first_name' => 'Fred',
-                'last_name' => 'Taran',
-                'email' => 'ftaran100411@gmail.com',
-                'username' => 'fred.taran',
-                'role' => 2,
-                'password' => bcrypt('@dmin123'),
-            ],
+            // [
+            //     'first_name' => 'Fred',
+            //     'last_name' => 'Taran',
+            //     'email' => 'ftaran100411@gmail.com',
+            //     'username' => 'fred.taran',
+            //     'role' => 2,
+            //     'password' => bcrypt('@dmin123'),
+            // ],
             [
                 'first_name' => 'Admin',
                 'last_name' => 'Admin',
-                'email' => 'ftaran04@gmail.com',
+                'email' => 'utpas2024@gmail.com',
                 'username' => 'system.admin',
                 'role' => 0,
                 'password' => bcrypt('@dmin123'),
@@ -36,10 +36,10 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::insert($data);
 
         $this->call([
-            CourseSeeder::class,
-            SubjectSeeder::class,
-            StudentSeeder::class,
-            TorSeeder::class
+            // CourseSeeder::class,
+            // SubjectSeeder::class,
+            // StudentSeeder::class,
+            // TorSeeder::class
         ]);
     }
 }
