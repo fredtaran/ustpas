@@ -49,7 +49,7 @@
 
                         <div class="form-group">
                             <label for="middle_name">Middlename</label>
-                            <input type="text" name="middle_name" id="middle_name" class="form-control" value="{{ old('middle_name') }}">
+                            <input type="text" name="middle_name" id="middle_name" class="form-control" value="{{ old('middle_name') }}" placeholder="If none, leave blank">
                         </div>
 
                         <div class="form-group">
@@ -59,7 +59,7 @@
 
                         <div class="form-group">
                             <label for="suffix">Suffix</label>
-                            <input type="text" name="suffix" id="suffix" class="form-control" value="{{ old('suffix') }}">
+                            <input type="text" name="suffix" id="suffix" class="form-control" value="{{ old('suffix') }}" placeholder="If none, leave blank">
                         </div>
 
                         <div class="form-group">
@@ -91,7 +91,7 @@
 
                         <div class="form-group">
                             <label for="major">Major (if any)</label>
-                            <input type="text" class="form-control" id="major" name="major" value="{{ old('major') }}">
+                            <input type="text" class="form-control" id="major" name="major" value="{{ old('major') }}" placeholder="If none, leave blank">
                         </div>
 
                         <div class="form-group">

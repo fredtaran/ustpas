@@ -60,19 +60,32 @@
                     data: null,
                     render: function(data, type, row, meta) {
                         if(data.subject.chairperson_id == {{ auth()->user()-> id}}) {
-                            return `<button class="btn btn-sm btn-primary approve">
+                            if(data.status == 1) {
+                                return `<button class="btn btn-sm btn-primary approve">
                                         <i class="fa fa-check"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger denied">
                                         <i class="fa fa-times"></i>
                                     </button>`
+                            } else if(data.status == 2) {
+                                return `<span class="badge badge-primary">Approved</span></td>`
+                            } else {
+                                return `<span class="badge badge-danger">Denied</span></td>`
+                            }
                         } else {
-                            return `<button class="btn btn-sm btn-primary approve" disabled>
+                            if(data.status == 1) {
+                                return `<button class="btn btn-sm btn-primary approve" disabled>
                                         <i class="fa fa-check"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger denied" disabled>
                                         <i class="fa fa-times"></i>
                                     </button>`
+                            } else if(data.status == 2) {
+                                return `<span class="badge badge-primary">Approved</span></td>`
+                            } else {
+                                return `<span class="badge badge-danger">Denied</span></td>`
+                            }
+                            
                         }
                     }
                 }
@@ -83,38 +96,61 @@
         });
 
         tableForAccre.on('click', 'button.approve', function() {
-            var data = tableForAccre.row($(this).parents('tr')).data();
-            $.ajax({
-                url: "{{ url('/chairperson/accredit') }}/" + data.id + "/approved",
-                type: "PUT",
-                dataType: "json",
-                data: {
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    tableForAccre.ajax.reload();
-                    window.location.href = window.location.origin
-                },
-                error: function(xhr, errorStatus, error) {
-                    console.log(error)
+            Swal.fire({
+                title: "Confirmation",
+                text: "Approved this accreditation?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: "Approve",
+                denyButtonText: 'Cancel'
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    var data = tableForAccre.row($(this).parents('tr')).data();
+                    $.ajax({
+                        url: "{{ url('/chairperson/accredit') }}/" + data.id + "/approved",
+                        type: "PUT",
+                        dataType: "json",
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            tableForAccre.ajax.reload();
+                        },
+                        error: function(xhr, errorStatus, error) {
+                            console.log(error)
+                        }
+                    });
                 }
             });
         });
 
         tableForAccre.on('click', 'button.denied', function() {
-            var data = tableForAccre.row($(this).parents('tr')).data();
-            $.ajax({
-                url: "{{ url('/chairperson/accredit') }}/" + data.id + "/denied",
-                type: "PUT",
-                dataType: "json",
-                data: {
-                    "_token": "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    tableForAccre.ajax.reload();
-                },
-                error: function(xhr, errorStatus, error) {
-                    console.log(error)
+            Swal.fire({
+                title: "Confirmation",
+                text: "Deny this accreditation?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: "Deny",
+                denyButtonText: 'Cancel'
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    var data = tableForAccre.row($(this).parents('tr')).data();
+                    $.ajax({
+                        url: "{{ url('/chairperson/accredit') }}/" + data.id + "/denied",
+                        type: "PUT",
+                        dataType: "json",
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            tableForAccre.ajax.reload();
+                        },
+                        error: function(xhr, errorStatus, error) {
+                            console.log(error)
+                        }
+                    });
                 }
             });
         });

@@ -62,8 +62,24 @@
                 {
                     data: null, 
                     render: function(data, type, row, meta) {
-                        return `<a href="{{ url('/chairperson/generate_pdf') }}/` + data.credited_subject[0].code_id + `" target="_blank" class="btn btn-primary btn-sm" title="View"><i class="fa fa-eye"></i></a>
-                        <button type="button" class="btn btn-success btn-sm evaluateBtn" title="Recommend" value="${data.id}" data-code="${data.credited_subject[0].code_id}"><i class="fa fa-check"></i></button>`
+                        let disabled = false;
+                        for(let i = 0; i <= data.credited_subject.length - 1; i++) {
+                            // console.log(data.credited_subject[i])
+                            if(data.credited_subject[i].status == 1) {
+                                disabled = true
+                                break
+                            }
+                        }
+                        
+                        if(disabled) {
+                            return `<a href="{{ url('/chairperson/generate_pdf') }}/` + data.credited_subject[0].code_id + `" target="_blank" class="btn btn-primary btn-sm" title="View"><i class="fa fa-eye"></i></a>
+                            <button type="button" class="btn btn-success btn-sm evaluateBtn" title="Recommend" value="${data.id}" data-code="${data.credited_subject[0].code_id}" disabled><i class="fa fa-check"></i></button>`
+                        } else {
+                            return `<a href="{{ url('/chairperson/generate_pdf') }}/` + data.credited_subject[0].code_id + `" target="_blank" class="btn btn-primary btn-sm" title="View"><i class="fa fa-eye"></i></a>
+                            <button type="button" class="btn btn-success btn-sm evaluateBtn" title="Recommend" value="${data.id}" data-code="${data.credited_subject[0].code_id}"><i class="fa fa-check"></i></button>`
+                        }
+
+                        
                     }
                 }
             ],
@@ -73,24 +89,36 @@
         });
 
         validateTable.on('click', 'td button.evaluateBtn', function() {
-            $.ajax({
-                url: "{{ url('chairperson/update_recommend_approval') }}/" + $(this).val() + "/" + $(this).attr('data-code'),
-                type: "POST",
-                dataType: "json",
-                data: {
-                    '_token': "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    Swal.fire({
-                        title: "Student Approved",
-                        text: "Student successfully recommended",
-                        icon: "info"
-                    });
+            Swal.fire({
+                title: "Confirmation",
+                text: "Are you sure you want to validate this accreditation?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: "Validate",
+                denyButtonText: 'Cancel'
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('chairperson/update_recommend_approval') }}/" + $(this).val() + "/" + $(this).attr('data-code'),
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            '_token': "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: "Student Approved",
+                                text: "Student successfully recommended",
+                                icon: "info"
+                            });
 
-                    validateTable.ajax.reload();
-                },
-                error: function(xhr, errStatus, error) {
-                    console.log(error);
+                            validateTable.ajax.reload();
+                        },
+                        error: function(xhr, errStatus, error) {
+                            console.log(error);
+                        }
+                    });
                 }
             });
         })
