@@ -14,7 +14,7 @@ class Subject extends Model
         'subject_description',
         'unit',
         'course_id',
-        'chairperson_id'
+        'approver'
     ];
 
     public function course() {
@@ -25,7 +25,7 @@ class Subject extends Model
         return $this->hasMany(SubjectForCredit::class, 'subject_id', 'id');
     }
 
-    public function chairperson() {
-        return $this->hasMany(User::class, 'id', 'chairperson_id');
+    public function approver_program() {
+        return $this->belongsTo(Course::class, 'approver');
     }
 }

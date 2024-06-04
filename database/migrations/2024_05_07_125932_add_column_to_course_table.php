@@ -15,7 +15,7 @@ return new class extends Migration
             //
             $table->unsignedBigInteger('dean_id')->nullable();
 
-            $table->foreign('dean_id')->references('id')->on('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreign('dean_id')->references('id')->on('users')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 

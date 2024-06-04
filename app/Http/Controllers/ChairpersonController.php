@@ -24,9 +24,14 @@ class ChairpersonController extends Controller
     public function get_students() {
         $students = Student::whereHas('credited_subject', function($query) {
                                 $query->whereHas('subject', function($x) {
-                                    $x->where('chairperson_id', auth()->user()->id);
+                                    $x->whereHas('course', function($y) {
+                                        $y->whereHas('chairperson', function($z) {
+                                            $z->where('id', auth()->user()->id);
+                                        });
+                                    });
                                 })->where('status', 1);
-                            })->with('course')->get();
+                            })
+                            ->with('course')->get();
 
         return response()->json([
             'data'  =>  $students
@@ -45,7 +50,7 @@ class ChairpersonController extends Controller
     // Get subjects for accredited
     public function get_subjects_for_accreditation($student_id) {
         $subjects = SubjectForCredit::with('subject')
-                                    ->with('subject.chairperson')
+                                    ->with('subject.course.chairperson')
                                     ->where('student_id', $student_id)
                                     ->get();
 
@@ -132,7 +137,7 @@ class ChairpersonController extends Controller
     // PDF View
     public function generate_pdf($code_id) {
         $creditedSubjects = SubjectForCredit::with('subject')
-                                            ->with('subject.chairperson')
+                                            ->with('subject.approver_program.chairperson')
                                             ->where('code_id', $code_id)
                                             ->get();
 

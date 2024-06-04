@@ -25,6 +25,12 @@
             <i class="fa fa-plus"></i> Add subject
         </button>
 
+        @if(session()->has('message'))
+            <div class="alert alert-danger mt-2">
+                {{ session()->get('message') }}
+            </div>
+        @endif
+
         <table class="table table-bordered table-hover text-center" id="tbl_subjects">
             <thead>
                 <tr>
@@ -67,11 +73,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="chairperson">Program/Area Chairperson</label>
-                                    <select name="chairperson" id="chairperson" class="form-control">
-                                        <option value="">--- Please select the subject Program/Area Chairperson ---</option>
-                                        @foreach ($chairpersons as $chairperson)
-                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
+                                    <label for="approver">Under what program</label>
+                                    <select name="approver" id="approver" class="form-control">
+                                        <option value="">--- Please select the program this course is under ---</option>
+                                        @foreach ($programs as $program)
+                                        <option value="{{ $program->id }}">{{ $program->course_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -122,11 +128,11 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="chairperson">Program/Area Chairperson</label>
-                                    <select name="edit_chairperson" id="edit_chairperson" class="form-control">
-                                        <option value="">--- Please select the subject Program/Area Chairperson ---</option>
-                                        @foreach ($chairpersons as $chairperson)
-                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
+                                    <label for="edit_approver">Under what program</label>
+                                    <select name="edit_approver" id="edit_approver" class="form-control">
+                                        <option value="">--- Please select the program this course is under ---</option>
+                                        @foreach ($programs as $program)
+                                        <option value="{{ $program->id }}">{{ $program->course_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -233,8 +239,10 @@ $(function() {
                 $('#edit_subject_code').val(response.subject.subject_code);
                 $('#edit_description').val(response.subject.subject_description);
                 $('#edit_unit').val(response.subject.unit);
-                if(response.subject.chairperson_id){
-                    $('#edit_chairperson option[value="' + response.subject.chairperson_id + '"]').prop('selected', true);
+                if (response.subject.approver) {
+                    $('#edit_approver option[value="' + response.subject.approver + '"]').prop('selected', true);
+                } else {
+                    $('#edit_approver option[value=""]').prop('selected', true);
                 }
             },
             error: function(xhr, response, error) {
@@ -267,8 +275,8 @@ $(function() {
                 number: true,
             },
 
-            chairperson: {
-                required: true
+            approver: {
+                required: true,
             }
         },
 
@@ -286,8 +294,8 @@ $(function() {
                 number: "Please input a valid numeric value."
             },
 
-            chairperson: {
-                required: "Please select the Program/Area Chairperson for this subject.",
+            approver: {
+                required: "Please select the program this subject is under.",
             }
         },
 
@@ -326,6 +334,10 @@ $(function() {
             edit_chairperson: {
                 required: true
             },
+
+            edit_approver: {
+                required: true
+            },
         },
 
         messages: {
@@ -344,9 +356,13 @@ $(function() {
 
             edit_chairperson: {
                 required: "Please select the Program/Area Chairperson for this subject.",
+            },
+
+            edit_approver: {
+                required: "Please select the program this subject is under.",
             }
         },
-
+        
         errorElement: 'span',
 
         errorPlacement: function (error, element) {

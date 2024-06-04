@@ -34,7 +34,7 @@
                         <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
                         <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
+                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code" value="3909158486">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                             </div>
@@ -43,6 +43,11 @@
 
                     <div class="card" id="student_data" style="display: none;">
                         <div class="card-body">
+                            <div class="">
+                                <h4>Student Details</h4>
+                                <span id="student"></span>
+                            </div>
+
                             <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
                                 <i class="fa fa-print"></i> Print
                             </a>
@@ -64,6 +69,7 @@
 
                                 </tbody>
                             </table>
+                            <cite style="color:red;"><span style="font-weight: bold;">Notice:</span> The print button will only be available once your corresponding program chairperson validates your subject accreditation request.</cite>
                         </div>
                     </div>
                 </div>
@@ -140,6 +146,15 @@
                                 }
 
                                 $('#student_data_tbl tbody').html(html);
+
+                                var student_details = `<h5><span style="font-weight: bold;">Student ID:</span> ${ response.student.student_id }</h5>`
+                                if(response.student.suffix != null) {
+                                student_details += `<h5><span style="font-weight: bold;">Name:</span> ${ response.student.last_name }, ${ response.student.first_name } ${ response.student.suffix } ${ response.student.middle_name }</h5>`
+                                } else {
+                                student_details += `<h5><span style="font-weight: bold;">Name:</span> ${ response.student.last_name }, ${ response.student.first_name } ${ response.student.middle_name }</h5>`
+                                }
+                                student_details += `<h5><span style="font-weight: bold;">Course:</span> ${ response.student.course[0].course_name }</h5>`
+                                $('#student').html(student_details)
 
                                 // Print Button
                                 $('#printBtn').attr('href', `{{ url('/generate_pdf') }}/${$('#tracking_code').val()}`);

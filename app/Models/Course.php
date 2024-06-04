@@ -17,7 +17,7 @@ class Course extends Model
     ];
 
     public function chairperson() {
-        return $this->hasMany(User::class, 'id', 'chairperson_id');
+        return $this->belongsTo(User::class, 'chairperson_id');
     }
 
     public function dean() {

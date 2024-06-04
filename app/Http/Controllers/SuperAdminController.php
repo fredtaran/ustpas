@@ -143,11 +143,11 @@ class SuperAdminController extends Controller
     // Subject page - return view
     public function course_detail($id) {
         $course = Course::where('id', $id)->first();
-        $chairpersons = User::where('role', 2)->get();
+        $programs = Course::all();
 
         return view('superadmin.course_detail')->with([
             'course' => $course,
-            'chairpersons' => $chairpersons
+            'programs' => $programs
         ]);
     }
 
@@ -162,18 +162,20 @@ class SuperAdminController extends Controller
     public function update_course(Request $request, $id) {
         // Validate inputs
         $course_data = $request->validate([
-            'edit_course_name' => ['required'],
-            'edit_course_code' => ['required'],
-            'edit_chairperson' => ['exists:users,id']
+            'edit_course_name'  => ['required'],
+            'edit_course_code'  => ['required'],
+            'edit_chairperson'  => ['exists:users,id'],
+            'edit_dean'         => ['required']
         ]);
 
         // Find the existing record
         $course = Course::findOrFail($id);
 
         // Update the values and save
-        $course->course_name = $course_data['edit_course_name'];
-        $course->course_code = $course_data['edit_course_code'];
+        $course->course_name    = $course_data['edit_course_name'];
+        $course->course_code    = $course_data['edit_course_code'];
         $course->chairperson_id = $course_data['edit_chairperson'];
+        $course->dean_id        = $course_data['edit_dean'];
         $course->save();
 
         // Refresh page
@@ -199,28 +201,34 @@ class SuperAdminController extends Controller
 
     // Save subject - process
     public function save_subject(Request $request) {
-        // dd($request->input());
+        try {
+            // Validate inputs
+            $subject_data = $request->validate([
+                'subject_code' => ['required'],
+                'description' => ['required'],
+                'unit' => ['numeric'],
+                'course_id' => ['required'],
+                'approver' => ['required']
+            ]);
 
-        // Validate inputs
-        $subject_data = $request->validate([
-            'subject_code' => ['required'],
-            'description' => ['required'],
-            'unit' => ['numeric'],
-            'course_id' => ['required'],
-            'chairperson' => ['required'],
-        ]);
+            // Initialize the subject model
+            $subject                        = new Subject();
+            $subject->subject_code          = $subject_data['subject_code'];
+            $subject->subject_description   = $subject_data['description'];
+            $subject->unit                  = $subject_data['unit'];
+            $subject->course_id             = $subject_data['course_id'];
+            $subject->approver              = $subject_data['approver'];
+            $subject->save();
 
-        // Initialize the subject model
-        $subject = new Subject();
-        $subject->subject_code = $subject_data['subject_code'];
-        $subject->subject_description = $subject_data['description'];
-        $subject->unit = $subject_data['unit'];
-        $subject->course_id = $subject_data['course_id'];
-        $subject->chairperson_id = $subject_data['chairperson'];
-        $subject->save();
+            // Refresh page
+            return redirect()->route('superadmin.course_detail', $subject_data['course_id']);
+        } catch (\Exception $e) {
+            $errorCode = $e->errorInfo[1];
 
-        // Refresh page
-        return redirect()->route('superadmin.course_detail', $subject_data['course_id']);
+            if ($errorCode == 1062) {
+                return back()->with('message', 'Subject with subject code: ' . $request->subject_code . ' already exists in this program.');
+            }
+        }
     }
 
     // Get subject - return json
@@ -235,20 +243,20 @@ class SuperAdminController extends Controller
         // Validate inputs
         $subject_data = $request->validate([
             'edit_subject_code' => ['required'],
-            'edit_description' => ['required'],
-            'edit_unit' => ['numeric'],
-            'course_id' => ['required'],
-            'edit_chairperson' => ['required']
+            'edit_description'  => ['required'],
+            'edit_unit'         => ['numeric'],
+            'edit_approver'     => ['required'],
+            'course_id'         => ['required']
         ]);
 
         // Find the existing record - return view
         $subject = Subject::findOrFail($id);
 
         // Update the values and save
-        $subject->subject_code = $subject_data['edit_subject_code'];
-        $subject->subject_description = $subject_data['edit_description'];
-        $subject->unit = $subject_data['edit_unit'];
-        $subject->chairperson_id = $subject_data['edit_chairperson'];
+        $subject->subject_code          = $subject_data['edit_subject_code'];
+        $subject->subject_description   = $subject_data['edit_description'];
+        $subject->unit                  = $subject_data['edit_unit'];
+        $subject->approver              = $subject_data['edit_approver'];
         $subject->save();
 
         // Refresh page

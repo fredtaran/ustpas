@@ -284,7 +284,7 @@
                 if(data == '') {
                     return "-"
                 } else {
-                    return data[0].first_name + " " + (data[0].middle_name == null ? "" : data[0].middle_name[0] + ".") + " " + data[0].last_name + " " + (data[0].suffix == null ? "" : data[0].suffix)
+                    return data.first_name + " " + (data.middle_name == null ? "" : data.middle_name + ".") + " " + data.last_name + " " + (data.suffix == null ? "" : data.suffix)
                 }
             }},
             { data: 'id', render: function(data, type, row, meta) {
@@ -329,7 +329,7 @@
                     error: function(xhr, response, error) {
                         Swal.fire({
                             title: "Something went wrong",
-                            text: "Please contact your system administrator",
+                            text: "Can't delete program/s with subject(s).",
                             icon: "error"
                         });
 

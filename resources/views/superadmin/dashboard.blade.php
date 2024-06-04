@@ -395,17 +395,17 @@
                         } else if(data.role == 3) {
                             return "Dean"
                         } else if(data.role == 0) {
-                            return "Superadmin"
+                            return "Superuser"
                         }
                     }
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        if(data.role == 0) {
-                            return '<button type="button" class="btn btn-primary btn-sm editUserBtn" title="Edit"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-warning btn-sm deleteUserBtn" title="Delete" disabled><i class="fa fa-trash-alt"></i></button>'
-                        } else {
+                        if(data.role != 0) {
                             return '<button type="button" class="btn btn-primary btn-sm editUserBtn" title="Edit"><i class="fa fa-edit"></i></button> <button type="button" class="btn btn-warning btn-sm deleteUserBtn" title="Delete"><i class="fa fa-trash-alt"></i></button>'
+                        } else {
+                            return '-'
                         }
                     }
                 },

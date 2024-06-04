@@ -12,10 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('subjects', function (Blueprint $table) {
-            //
-            $table->unsignedBigInteger('chairperson_id')->nullable();
-
-            $table->foreign('chairperson_id')->references('id')->on('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unsignedBigInteger('approver')->nullable();
+            $table->foreign('approver')->references('id')->on('courses')->cascadeOnUpdate()->nullOnDelete();
         });
     }
 
@@ -26,11 +24,10 @@ return new class extends Migration
     {
         Schema::table('subjects', function (Blueprint $table) {
             //
-            // Drop the foreign key constraint
-            $table->dropForeign(['chairperson_id']);
+            $table->dropForeign(['approver']);
 
             // Drop the chairperson_id column
-            $table->dropColumn('chairperson_id');
+            $table->dropColumn('approver');
         });
     }
 };

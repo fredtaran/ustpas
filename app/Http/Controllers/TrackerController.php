@@ -22,16 +22,18 @@ class TrackerController extends Controller
     public function get_accredited_subjects($code) {
         $tracking_code = Code::where('code', $code)->first();
         $subjects = SubjectForCredit::with('subject')->where('code_id', $tracking_code->id)->get();
+        $student = Student::where('id', $subjects[0]->student_id)->with('course')->first();
 
         return response()->json([
-            'data' => $subjects
+            'data'      => $subjects,
+            'student'   => $student
         ]);        
     }
 
     public function generate_pdf($tracking_code) {
         $code = Code::where('code', $tracking_code)->first();
         $creditedSubjects = SubjectForCredit::with('subject')
-                                            ->with('subject.chairperson')
+                                            ->with('subject.course.chairperson')
                                             ->where('code_id', $code->id)
                                             ->get();
 
