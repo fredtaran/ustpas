@@ -33,6 +33,7 @@ Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout'
 Route::middleware(['auth', 'checkRoles:1'])->prefix('admission')->group(function() {
     // Dashboard
     Route::get('', [AdmissionController::class, 'dashboard'])->name('admission.dashboard');
+    Route::get('/get_history', [AdmissionController::class, 'get_history'])->name('admission.get_history');
 
     // Student
     Route::get('/students', [AdmissionController::class, 'students_view'])->name('admission.students_view');
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'checkRoles:2'])->prefix('chairperson')->group(functi
     Route::get('/student_for_validation', [ChairpersonController::class, 'recommend'])->name('chairperson.recommend');
     Route::get('/generate_pdf/{code_id}', [ChairpersonController::class, 'generate_pdf'])->name('chairperson.generate_pdf');
     Route::post('/update_recommend_approval/{student_id}/{code_id}', [ChairpersonController::class, 'update_recommend_approval'])->name('chairperson.update_recommend_approval');
+    Route::get('/get_history', [ChairpersonController::class, 'get_history'])->name('chairperson.get_history');
 });
 
 // Superadmin

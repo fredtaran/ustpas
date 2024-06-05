@@ -318,4 +318,14 @@ class AdmissionController extends Controller
             'data' => $subjects_for_credit
         ]);
     }
+
+    // Get all recommended accreditation for the history
+    public function get_history() {
+        $credited_subjects = SubjectForCredit::with('student')
+                                            ->get();
+
+        return response()->json([
+            'data'  => $credited_subjects
+        ]);
+    }
 }

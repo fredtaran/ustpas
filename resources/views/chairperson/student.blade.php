@@ -59,7 +59,7 @@
                 { 
                     data: null,
                     render: function(data, type, row, meta) {
-                        if(data.subject.course[0].chairperson[0].id == {{ auth()->user()-> id}}) {
+                        if(data.subject.course[0].chairperson.id == {{ auth()->user()-> id}}) {
                             if(data.status == 1) {
                                 return `<button class="btn btn-sm btn-primary approve">
                                         <i class="fa fa-check"></i>

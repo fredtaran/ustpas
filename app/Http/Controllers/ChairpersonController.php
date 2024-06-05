@@ -175,4 +175,22 @@ class ChairpersonController extends Controller
             'subjects' => $credited_subjects
         ]);
     }
+    
+    // Get all recommended accreditation for the history
+    public function get_history() {
+        $credited_subjects = SubjectForCredit::whereHas('subject', function($query) {
+                                                $query->whereHas('course', function($query2) {
+                                                    $query2->whereHas('chairperson', function($query3) {
+                                                        $query3->where('id', auth()->user()->id);
+                                                    });
+                                                });
+                                            })
+                                            ->with('student')
+                                            ->where('recom_app', 1)
+                                            ->get();
+
+        return response()->json([
+            'data'  => $credited_subjects
+        ]);
+    }
 }

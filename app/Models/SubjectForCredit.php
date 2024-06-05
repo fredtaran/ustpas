@@ -24,4 +24,8 @@ class SubjectForCredit extends Model
     public function subject() {
         return $this->belongsTo(Subject::class, 'subject_id');
     }
+
+    public function student() {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 }
