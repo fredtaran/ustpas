@@ -103,24 +103,33 @@
                 showCancelButton: true,
                 confirmButtonText: "Approve",
                 denyButtonText: 'Cancel'
-                }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
+                }).then( async (result) => {
                 if (result.isConfirmed) {
-                    var data = tableForAccre.row($(this).parents('tr')).data();
-                    $.ajax({
-                        url: "{{ url('/chairperson/accredit') }}/" + data.id + "/approved",
-                        type: "PUT",
-                        dataType: "json",
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            tableForAccre.ajax.reload();
-                        },
-                        error: function(xhr, errorStatus, error) {
-                            console.log(error)
-                        }
-                    });
+                    try {
+                        Swal.showLoading()
+                        var data = tableForAccre.row($(this).parents('tr')).data();
+                        
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                url: "{{ url('/chairperson/accredit') }}/" + data.id + "/approved",
+                                type: "PUT",
+                                dataType: "json",
+                                data: {
+                                    "_token": "{{ csrf_token() }}"
+                                },
+                                success: function(response) {
+                                    tableForAccre.ajax.reload();
+                                    resolve(response)
+                                },
+                                error: function(xhr, errorStatus, error) {
+                                    console.log(error)
+                                    reject(error)
+                                }
+                            });
+                        })
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }
             });
         });
@@ -128,31 +137,48 @@
         tableForAccre.on('click', 'button.denied', function() {
             Swal.fire({
                 title: "Confirmation",
-                text: "Deny this accreditation?",
                 icon: 'question',
+                html: '<h5>Deny this accreditation?</h5><textarea name="remarks" id="remarks" placeholder="Please provide a reason for denying" class="form-control" required></textarea>',
                 showCancelButton: true,
                 confirmButtonText: "Deny",
-                denyButtonText: 'Cancel'
-                }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    var data = tableForAccre.row($(this).parents('tr')).data();
-                    $.ajax({
-                        url: "{{ url('/chairperson/accredit') }}/" + data.id + "/denied",
-                        type: "PUT",
-                        dataType: "json",
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
-                            tableForAccre.ajax.reload();
-                        },
-                        error: function(xhr, errorStatus, error) {
-                            console.log(error)
+                denyButtonText: 'Cancel',
+                preConfirm: async () => {
+                    try {
+                        Swal.showLoading();
+                        
+                        // Check if the required field is filled
+                        if ($('#remarks').val() == "") {
+                            Swal.showValidationMessage('Please provide a reason for denying.');
+                            return false; // Prevents the promise from resolving
                         }
-                    });
+
+                        // Proceed
+                        var data = tableForAccre.row($(this).parents('tr')).data();
+
+                        return new Promise((resolve, reject) => {
+                            $.ajax({
+                                url: "{{ url('/chairperson/accredit') }}/" + data.id + "/denied",
+                                type: "PUT",
+                                dataType: "json",
+                                data: {
+                                    "_token": "{{ csrf_token() }}",
+                                    "remarks": $('#remarks').val()
+                                },
+                                success: function(response) {
+                                    tableForAccre.ajax.reload();
+                                    resolve(response)
+                                },
+                                error: function(xhr, errorStatus, error) {
+                                    console.log(error)
+                                    reject(error)
+                                }
+                            });
+                        })
+                    } catch (err) {
+                        console.log(err)
+                    }
                 }
-            });
+            })
         });
     })
 </script>

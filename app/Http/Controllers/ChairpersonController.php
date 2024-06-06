@@ -7,11 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+use Mail;
+use App\Mail\NotifyStudentApprove;
+use App\Mail\NotifyStudentDeny;
+
 use App\Models\Student;
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\SubjectForCredit;
+use App\Models\Code;
 
 class ChairpersonController extends Controller
 {
@@ -60,15 +65,24 @@ class ChairpersonController extends Controller
     }
 
     // Update if approve or denied
-    public function update_status($accreditation_id, $status) {
+    public function update_status(Request $request, $accreditation_id, $status) {
         $accreditation = SubjectForCredit::findOrFail($accreditation_id);
+        $student = Student::findOrFail($accreditation->student_id);
+        $code = Code::findOrFail($accreditation->code_id);
 
         if($status == 'approved') {
             $accreditation->status = 2;
             $accreditation->save();
+
+            // Notify student - Approve
+            Mail::to($student->email)->send(new NotifyStudentApprove($student, $code));
         } else if($status == 'denied') {
             $accreditation->status = 3;
+            $accreditation->remarks = $request->remarks;
             $accreditation->save();
+
+            // Notify student - Deny
+            Mail::to($student->email)->send(new NotifyStudentDeny($student, $code, $request->remarks));
         }
 
         return response()->json([
