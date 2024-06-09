@@ -27,15 +27,25 @@ class ChairpersonController extends Controller
 
     // Get all the students subjected for accreditation
     public function get_students() {
+        // $students = Student::whereHas('credited_subject', function($query) {
+        //                         $query->whereHas('subject', function($x) {
+        //                             $x->whereHas('course', function($y) {
+        //                                 $y->whereHas('chairperson', function($z) {
+        //                                     $z->where('id', auth()->user()->id);
+        //                                 });
+        //                             });
+        //                         })->where('status', 1);
+        //                     })
+        //                     ->with('course')->get();
+
         $students = Student::whereHas('credited_subject', function($query) {
-                                $query->whereHas('subject', function($x) {
-                                    $x->whereHas('course', function($y) {
-                                        $y->whereHas('chairperson', function($z) {
-                                            $z->where('id', auth()->user()->id);
-                                        });
+                                $query->whereHas('subject', function($query2) {
+                                    $query2->whereHas('approver_program', function($query3) {
+                                        $query3->where('chairperson_id', auth()->user()->id);
                                     });
                                 })->where('status', 1);
                             })
+                            ->with('credited_subject.subject.approver_program')
                             ->with('course')->get();
 
         return response()->json([
