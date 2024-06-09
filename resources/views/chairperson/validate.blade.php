@@ -95,18 +95,32 @@
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: "Validate",
-                denyButtonText: 'Cancel'
-                }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
+                denyButtonText: 'Cancel',
+                allowOutsideClick: false, // Prevents the modal from closing when clicking outside of it
+            }).then((result) => {
                 if (result.isConfirmed) {
-                    $.ajax({
-                        url: "{{ url('chairperson/update_recommend_approval') }}/" + $(this).val() + "/" + $(this).attr('data-code'),
-                        type: "POST",
-                        dataType: "json",
-                        data: {
-                            '_token': "{{ csrf_token() }}"
-                        },
-                        success: function(response) {
+                    Swal.fire({
+                        html: "<h5 style='color: #0c5460'>Wait...</h5>",
+                        width: 400,
+                        padding: '1em',
+                        timer: 1000,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    }).then(async() => {
+                        try {
+                            const response = await $.ajax({
+                                url: "{{ url('chairperson/update_recommend_approval') }}/" + $(this).val() + "/" + $(this).attr('data-code'),
+                                type: "POST",
+                                dataType: "json",
+                                data: {
+                                    '_token': "{{ csrf_token() }}"
+                                },
+                                async: false, // Make the request synchronous so that we can wait for its completion
+                            });
+
+                            Swal.close(); // Close the loading indicator
+
                             Swal.fire({
                                 title: "Student Approved",
                                 text: "Student successfully recommended",
@@ -114,9 +128,9 @@
                             });
 
                             validateTable.ajax.reload();
-                        },
-                        error: function(xhr, errStatus, error) {
+                        } catch (error) {
                             console.log(error);
+                            Swal.close(); // Ensure the loading indicator is closed even if an error occurs
                         }
                     });
                 }

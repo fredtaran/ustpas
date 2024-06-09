@@ -23,6 +23,16 @@
         <button type="button" class="btn btn-default btn-outline-primary" data-toggle="modal" data-target="#modal-newCourses">
             <i class="fa fa-plus"></i> New course
         </button>
+
+        @if ($errors->has('edit_course_name') || $errors->has('edit_course_code'))
+        <div class="alert alert-danger my-2">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
         
         <table class="table table-bordered table-hover text-center" id="tbl_courses">
             <thead>
@@ -51,12 +61,18 @@
                                 @csrf
                                 <div class="form-group">
                                     <label for="course_name">Program Title</label>
-                                    <input type="text" name="course_name" class="form-control" id="course_name">
+                                    <input type="text" name="course_name" class="form-control" id="course_name" value="{{ old('course_name') }}">
+                                    @if ($errors->has('course_name'))
+                                    <cite class="text-danger">{{$errors->first('course_name')}}</cite>
+                                    @endif
                                 </div>
 
                                 <div class="form-group">
                                     <label for="course_code">Program Code</label>
-                                    <input type="text" name="course_code" class="form-control" id="course_code" placeholder="e.g BSIT">
+                                    <input type="text" name="course_code" class="form-control" id="course_code" placeholder="e.g BSIT" value="{{ old('course_code') }}">
+                                    @if ($errors->has('course_code'))
+                                    <cite class="text-danger">{{$errors->first('course_code')}}</cite>
+                                    @endif
                                 </div>
 
                                 <div class="form-group">
@@ -64,7 +80,7 @@
                                     <select name="chairperson" id="chairperson" class="form-control">
                                         <option value="">--- Please select the course chairperson ---</option>
                                         @foreach ($chairpersons as $chairperson)
-                                        <option value="{{ $chairperson->id }}">{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
+                                        <option value="{{ $chairperson->id }}" {{ $chairperson->id == old('chairperson')? 'selected' : '' }}>{{ sprintf("$chairperson->last_name, $chairperson->first_name $chairperson->suffix $chairperson->middle_name") }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -74,7 +90,7 @@
                                     <select name="dean" id="dean" class="form-control">
                                         <option value="">--- Please select the college dean ---</option>
                                         @foreach ($deans as $dean)
-                                        <option value="{{ $dean->id }}">{{ sprintf("$dean->last_name, $dean->first_name $dean->suffix $dean->middle_name") }}</option>
+                                        <option value="{{ $dean->id }}" {{ $dean->id == old('dean')? 'selected' : '' }}>{{ sprintf("$dean->last_name, $dean->first_name $dean->suffix $dean->middle_name") }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -157,6 +173,14 @@
 @section('page_custom_script')
 <script>
   $(function () {
+    @if ($errors->has('course_name') || $errors->has('course_code'))
+        $('#modal-newCourses').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: true
+        });
+    @endif
+    
     // Modal form validation
     $.validator.setDefaults({
         submitHandler: function (form) {
@@ -341,7 +365,7 @@
     })
 
     // Edit button function
-    courseTable.on('click', 'td button.editCourseBtn', function() {
+    const edit_course = function(id = null) {
         var data = courseTable.row($(this).parents('tr')).data();
 
         // Retrieve data
@@ -350,7 +374,6 @@
             type: "GET",
             dataType: 'json',
             success: function(response) {
-                console.log(response.course.dean_id)
                 // Show modal
                 $('#editCourse_form').attr('action', "{{ url('/superadmin/courses') }}/" + data.id + "/edit");
                 $('#modal-editCourses').modal('show');
@@ -363,7 +386,10 @@
                 console.log(error);
             }
         });
-    });
+    };
+
+    // Attach the edit_course function to the click event
+    courseTable.on('click', 'td button.editCourseBtn', edit_course)
   });
 </script>
 @endsection

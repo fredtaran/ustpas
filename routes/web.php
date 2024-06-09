@@ -27,6 +27,8 @@ Route::middleware(['guest'])->get('/get_status/{code}', [TrackerController::clas
 Route::middleware(['guest'])->get('/generate_pdf/{code}', [TrackerController::class, 'generate_pdf'])->name('tracker.generate_pdf');
 Route::middleware(['guest'])->get('/login', [AuthenticationController::class, 'login_view'])->name('login.view');
 Route::middleware(['guest'])->post('/login', [AuthenticationController::class, 'login_authenticate'])->name('login.authenticate');
+Route::middleware(['auth'])->get('/change-password', [AuthenticationController::class, 'change_password'])->name('auth.change_password');
+Route::middleware(['auth'])->post('/change-password', [AuthenticationController::class, 'save_change_password'])->name('auth.save_change_password');
 Route::get('logout', [AuthenticationController::class, 'logout'])->name('logout');
 
 // Admission Routes

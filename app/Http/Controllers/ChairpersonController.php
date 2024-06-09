@@ -55,7 +55,7 @@ class ChairpersonController extends Controller
     // Get subjects for accredited
     public function get_subjects_for_accreditation($student_id) {
         $subjects = SubjectForCredit::with('subject')
-                                    ->with('subject.course.chairperson')
+                                    ->with('subject.approver_program.chairperson')
                                     ->where('student_id', $student_id)
                                     ->get();
 
@@ -73,9 +73,6 @@ class ChairpersonController extends Controller
         if($status == 'approved') {
             $accreditation->status = 2;
             $accreditation->save();
-
-            // Notify student - Approve
-            Mail::to($student->email)->send(new NotifyStudentApprove($student, $code));
         } else if($status == 'denied') {
             $accreditation->status = 3;
             $accreditation->remarks = $request->remarks;
@@ -179,10 +176,16 @@ class ChairpersonController extends Controller
         $credited_subjects = SubjectForCredit::where('student_id', $student_id)
                                                 ->where('code_id', $code_id)
                                                 ->get();
+        $student = Student::findOrFail($student_id);
+        $code = Code::findOrFail($code_id);
+        
 
         foreach($credited_subjects as $subject) {
             $subject->recom_app = 1;
             $subject->save();
+
+            // Notify student - Approve
+            Mail::to($student->email)->send(new NotifyStudentApprove($student, $code));
         }
 
         return response()->json([

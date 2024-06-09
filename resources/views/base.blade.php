@@ -125,6 +125,13 @@
                             @endif
 
                             <li class="nav-item">
+                                <a href="{{ route('auth.change_password') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-lock"></i>
+                                    Change Password
+                                </a>
+                            </li>
+                            
+                            <li class="nav-item">
                                 <a href="{{ route('logout') }}" class="nav-link">
                                     <i class="nav-icon fas fa-sign-out-alt"></i>
                                     Logout

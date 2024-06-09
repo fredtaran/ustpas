@@ -122,11 +122,15 @@ class SuperAdminController extends Controller
     public function save_course(Request $request) {
         // Validate inputs
         $course_data = $request->validate([
-            'course_name'   => ['required'],
-            'course_code'   => ['required'],
-            'chairperson'   => ['exists:users,id'],
-            'dean'          => ['required']
+            'course_name'   => 'required|unique:courses,course_name',
+            'course_code'   => 'required|unique:courses,course_code',
+            'chairperson'   => 'exists:users,id',
+            'dean'          => 'required'
         ]);
+
+        if($course_data === []) {
+            return back()->withErrors($course_data)->withInput();
+        }
 
         // Save new course to database
         $course = new Course();
@@ -162,24 +166,28 @@ class SuperAdminController extends Controller
     public function update_course(Request $request, $id) {
         // Validate inputs
         $course_data = $request->validate([
-            'edit_course_name'  => ['required'],
-            'edit_course_code'  => ['required'],
-            'edit_chairperson'  => ['exists:users,id'],
-            'edit_dean'         => ['required']
+            'edit_course_name'   => 'required|unique:courses,course_name,' . $id,
+            'edit_course_code'   => 'required|unique:courses,course_code,' . $id,
+            'edit_chairperson'   => 'exists:users,id',
+            'edit_dean'          => 'required'
         ]);
 
-        // Find the existing record
-        $course = Course::findOrFail($id);
+        if($course_data === []) {
+            return back()->withErrors($course_data)->withInput();
+        }
 
-        // Update the values and save
-        $course->course_name    = $course_data['edit_course_name'];
-        $course->course_code    = $course_data['edit_course_code'];
-        $course->chairperson_id = $course_data['edit_chairperson'];
-        $course->dean_id        = $course_data['edit_dean'];
-        $course->save();
+        // // Find the existing record
+        // $course = Course::findOrFail($id);
 
-        // Refresh page
-        return redirect()->route('superadmin.courses_view');
+        // // Update the values and save
+        // $course->course_name    = $course_data['edit_course_name'];
+        // $course->course_code    = $course_data['edit_course_code'];
+        // $course->chairperson_id = $course_data['edit_chairperson'];
+        // $course->dean_id        = $course_data['edit_dean'];
+        // $course->save();
+
+        // // Refresh page
+        // return redirect()->route('superadmin.courses_view');
     }
 
     // Delete course - process

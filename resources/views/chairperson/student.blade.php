@@ -59,7 +59,7 @@
                 { 
                     data: null,
                     render: function(data, type, row, meta) {
-                        if(data.subject.course[0].chairperson.id == {{ auth()->user()-> id}}) {
+                        if(data.subject.approver_program.chairperson.id == {{ auth()->user()-> id}}) {
                             if(data.status == 1) {
                                 return `<button class="btn btn-sm btn-primary approve">
                                         <i class="fa fa-check"></i>
@@ -85,7 +85,6 @@
                             } else {
                                 return `<span class="badge badge-danger">Denied</span></td>`
                             }
-                            
                         }
                     }
                 }
