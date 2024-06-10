@@ -111,7 +111,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add new course</h4>
+                        <h4 class="modal-title">Add New File</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -121,7 +121,7 @@
                         <div class="modal-body">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="tor">Course Name</label>
+                                    <label for="tor">Filename</label>
                                     <input type="file" name="tor[]" class="form-control" id="tor" multiple>
                                     <input type="hidden" name="student_id" class="form-control" id="student_id" value="{{ $student->id }}" readonly>
                                 </div>

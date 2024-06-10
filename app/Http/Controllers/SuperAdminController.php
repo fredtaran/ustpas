@@ -176,18 +176,18 @@ class SuperAdminController extends Controller
             return back()->withErrors($course_data)->withInput();
         }
 
-        // // Find the existing record
-        // $course = Course::findOrFail($id);
+        // Find the existing record
+        $course = Course::findOrFail($id);
 
-        // // Update the values and save
-        // $course->course_name    = $course_data['edit_course_name'];
-        // $course->course_code    = $course_data['edit_course_code'];
-        // $course->chairperson_id = $course_data['edit_chairperson'];
-        // $course->dean_id        = $course_data['edit_dean'];
-        // $course->save();
+        // Update the values and save
+        $course->course_name    = $course_data['edit_course_name'];
+        $course->course_code    = $course_data['edit_course_code'];
+        $course->chairperson_id = $course_data['edit_chairperson'];
+        $course->dean_id        = $course_data['edit_dean'];
+        $course->save();
 
-        // // Refresh page
-        // return redirect()->route('superadmin.courses_view');
+        // Refresh page
+        return redirect()->route('superadmin.courses_view');
     }
 
     // Delete course - process

@@ -82,11 +82,12 @@ class DeanController extends Controller
     // PDF View
     public function generate_pdf($code_id) {
         $creditedSubjects = SubjectForCredit::with('subject')
-                                            ->with('subject.chairperson')
+                                            ->with('subject.approver_program.chairperson')
                                             ->where('code_id', $code_id)
                                             ->get();
                                             
         $student_course = Student::where('id', $creditedSubjects[0]->student_id)->first();
+        
         $course = Course::with('chairperson')
                         ->with('dean')
                         ->where('id', $student_course->course_id)
