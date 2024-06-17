@@ -162,6 +162,17 @@
 
                 </tr>
                 @endforeach
+
+                @for ($i = 0; $i < 4; $i++) 
+                <tr>
+                    <td>&nbsp;<br>&nbsp;</td>
+                    <td>&nbsp;<br>&nbsp;</td>
+                    <td>&nbsp;<br>&nbsp;</td>
+                    <td>&nbsp;<br>&nbsp;</td>
+                    <td>&nbsp;<br>&nbsp;</td>
+                    <td>&nbsp;<br>&nbsp;</td>
+                </tr>
+                @endfor
             </tbody>
         </table>
 
