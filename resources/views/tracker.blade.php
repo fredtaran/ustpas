@@ -20,38 +20,37 @@
     </head>
 
     <body class="hold-transition sidebar-mini layout-fixed">
-        <div class="wrapper">
+        <!-- Preloader -->
+        <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="{{ asset('img/ustp-logo.png') }}" alt="USTP Logo" style="border-radius: 5%;">
+        </div>
 
-            <!-- Preloader -->
-            <div class="preloader flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="{{ asset('img/ustp-logo.png') }}" alt="USTP Logo" style="border-radius: 5%;">
-            </div>
+        <!-- Main content -->
+        <section class="content mt-5">
+            <div class="container-fluid">
+                <div class="text-center">
+                    <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
 
-            <!-- Main content -->
-            <section class="content mt-5">
-                <div class="container-fluid">
-                    <div class="text-center">
-                        <img src="{{ asset('img/site-logo.png') }}" alt="USTP Accreditation System Logo">
-
-                        <div class="input-group mb-3 col-md-6 offset-md-3">
-                            <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
-                            </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" autocoplete="off" placeholder="Enter tracking code" id="tracking_code">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="searchBtn"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
+                </div>
 
-                    <div class="card" id="student_data" style="display: none;">
-                        <div class="card-body">
-                            <div class="">
-                                <h4>Student Details</h4>
-                                <span id="student"></span>
-                            </div>
+                <div class="card" id="student_data" style="display: none;">
+                    <div class="card-body">
+                        <div class="">
+                            <h4>Student Details</h4>
+                            <span id="student"></span>
+                        </div>
 
-                            <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
-                                <i class="fa fa-print"></i> Print
-                            </a>
+                        <a target="_blank" id="printBtn" class="btn btn-primary float-right mb-2">
+                            <i class="fa fa-print"></i> Print
+                        </a>
 
+                        <div class="table-responsive">
                             <table class="table table-bordered text-center" id="student_data_tbl">
                                 <thead>
                                     <tr>
@@ -69,12 +68,12 @@
 
                                 </tbody>
                             </table>
-                            <cite style="color:red;"><span style="font-weight: bold;">Notice:</span> The print button will only be available once your corresponding program chairperson validates your subject accreditation request.</cite>
                         </div>
+                        <cite style="color:red;"><span style="font-weight: bold;">Notice:</span> The print button will only be available once your corresponding program chairperson validates your subject accreditation request.</cite>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
         <!-- ./wrapper -->
 
         <!-- jQuery -->

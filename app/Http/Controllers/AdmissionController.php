@@ -273,9 +273,10 @@ class AdmissionController extends Controller
 
             // Prepare the data to be save to credited_subject_table
             $convert_subject_to_collection = collect($filterSubjects);
-            $data_for_saving = $convert_subject_to_collection->map(function($item) use ($student_id, $new_code) {
+            $data_for_saving = $convert_subject_to_collection->map(function($item) use ($student_id, $new_code, $tor_id) {
                 $item[0]['student_id'] = $student_id;
                 $item[0]['code_id'] = $new_code->id;
+                $item[0]['tor_id'] = $tor_id;
                 return $item;
             });
 

@@ -55,6 +55,7 @@ class ChairpersonController extends Controller
     public function get_subjects_for_accreditation($student_id) {
         $subjects = SubjectForCredit::with('subject')
                                     ->with('subject.approver_program.chairperson')
+                                    ->with('tor')
                                     ->where('student_id', $student_id)
                                     ->get();
 

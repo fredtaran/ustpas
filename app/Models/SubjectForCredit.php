@@ -18,7 +18,8 @@ class SubjectForCredit extends Model
         'subject_code_to_be_credited',
         'subject_title_to_be_credited',
         'recom_app',
-        'approved'
+        'approved',
+        'tor_id'
     ];
 
     public function subject() {
@@ -27,5 +28,9 @@ class SubjectForCredit extends Model
 
     public function student() {
         return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    public function tor() {
+        return $this->belongsTo(Tor::class, 'tor_id');
     }
 }

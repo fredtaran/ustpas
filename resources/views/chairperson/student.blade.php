@@ -61,7 +61,11 @@
                     render: function(data, type, row, meta) {
                         if(data.subject.approver_program.chairperson.id == {{ auth()->user()-> id}}) {
                             if(data.status == 1) {
-                                return `<button class="btn btn-sm btn-primary approve">
+                                return `
+                                    <a href="{{ url('storage') }}/${data.tor.file_path}" target="_blank" class="btn btn-sm btn-secondary">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-primary approve">
                                         <i class="fa fa-check"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger denied">
@@ -74,7 +78,11 @@
                             }
                         } else {
                             if(data.status == 1) {
-                                return `<button class="btn btn-sm btn-primary approve" disabled>
+                                return `
+                                    <a href="{{ url('storage') }}/${data.tor.file_path}" target="_blank" class="btn btn-sm btn-secondary disabled">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-primary approve" disabled>
                                         <i class="fa fa-check"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger denied" disabled>
